@@ -12,13 +12,18 @@ import StudentSetting from './pages/student/StudentSetting';
 import StudentDashboard from './pages/student/StudentDashboard';
 import UniversityList from './pages/student/UniversityList';
 import YourApplications from './pages/student/YourApplications'
+import RoleSelection from './components/auth/RoleSelection';
+import StudentSignup from './pages/auth/StudentSignup';
+import UniversitySignup from './pages/auth/UniversitySignup';
 function App() {
   return (
     <div className="App">
       <NextUIProvider>
         <BrowserRouter>
           <Routes>
-            <Route path='/' Component={Signup}></Route>
+            <Route path='/' Component={RoleSelection}></Route>
+            <Route path='/student-signup' Component={StudentSignup}></Route>
+            <Route path='/university-signup' Component={UniversitySignup}></Route>
             <Route path='/login' Component={Login}></Route>
 
             <Route path='/student-onboard' Component={StudentOnboardForm}></Route>
