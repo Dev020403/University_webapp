@@ -1,42 +1,48 @@
 import './App.css';
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/Signup';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { NextUIProvider } from '@nextui-org/react';
+import Login from './pages/auth/Login';
 import StudentOnboardForm from './pages/student/StudentOnboard';
 import UniversityOnboardForm from './pages/university/UniversityOnboard';
-import UniversitySetting from './pages/university/UniversitySetting'
-import UniversityDashboard from './pages/university/UniversityDashboard'
-import UniversityApplication from './pages/university/UniversityApplication'
-import { NextUIProvider } from '@nextui-org/react';
+import UniversitySetting from './pages/university/UniversitySetting';
+import UniversityDashboard from './pages/university/UniversityDashboard';
+import UniversityApplication from './pages/university/UniversityApplication';
 import StudentSetting from './pages/student/StudentSetting';
 import StudentDashboard from './pages/student/StudentDashboard';
 import UniversityList from './pages/student/UniversityList';
-import YourApplications from './pages/student/YourApplications'
+import YourApplications from './pages/student/YourApplications';
 import RoleSelection from './components/auth/RoleSelection';
 import StudentSignup from './pages/auth/StudentSignup';
 import UniversitySignup from './pages/auth/UniversitySignup';
+import ProtectedRoute from './utils/ProtectedRoute';
+
 function App() {
   return (
     <div className="App">
       <NextUIProvider>
         <BrowserRouter>
           <Routes>
-            <Route path='/' Component={RoleSelection}></Route>
-            <Route path='/student-signup' Component={StudentSignup}></Route>
-            <Route path='/university-signup' Component={UniversitySignup}></Route>
-            <Route path='/login' Component={Login}></Route>
+            <Route path='/' Component={RoleSelection} />
+            <Route path='/student-signup' Component={StudentSignup} />
+            <Route path='/university-signup' Component={UniversitySignup} />
+            <Route path='/login' Component={Login} />
 
-            <Route path='/student-onboard' Component={StudentOnboardForm}></Route>
-            <Route path='/student-dashboard/Dashboard' Component={StudentDashboard}></Route>
-            <Route path='/student-dashboard/Universities' Component={UniversityList}></Route>
-            <Route path='/student-dashboard/Applications' Component={YourApplications}></Route>
-            <Route path='/student-dashboard/Setting' Component={StudentSetting}></Route>
+            {/* Student Routes */}
+            <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+              <Route path='/student-onboard' Component={StudentOnboardForm} />
+              <Route path='/student-dashboard/Dashboard' Component={StudentDashboard} />
+              <Route path='/student-dashboard/Universities' Component={UniversityList} />
+              <Route path='/student-dashboard/Applications' Component={YourApplications} />
+              <Route path='/student-dashboard/Setting' Component={StudentSetting} />
+            </Route>
 
-            <Route path='/university-onboard' Component={UniversityOnboardForm}></Route>
-            <Route path='/university-dashboard/Setting' Component={UniversitySetting}></Route>
-            <Route path='/university-dashboard/Application' Component={UniversityApplication}></Route>
-            <Route path='/university-dashboard/Dashboard' Component={UniversityDashboard}></Route>
-
+            {/* University Routes */}
+            <Route element={<ProtectedRoute allowedRoles={['university']} />}>
+              <Route path='/university-onboard' Component={UniversityOnboardForm} />
+              <Route path='/university-dashboard/Setting' Component={UniversitySetting} />
+              <Route path='/university-dashboard/Application' Component={UniversityApplication} />
+              <Route path='/university-dashboard/Dashboard' Component={UniversityDashboard} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </NextUIProvider>

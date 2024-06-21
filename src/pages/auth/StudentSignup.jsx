@@ -1,11 +1,16 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState } from "react";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TextInputField from "../../components/auth/TextInputField";
+import DateInputField from "../../components/auth/DateInputField";
 
 const StudentSignup = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const validationSchema = Yup.object({
     username: Yup.string().required("Username is required"),
     email: Yup.string()
@@ -46,8 +51,6 @@ const StudentSignup = () => {
       );
       console.log("Registration successful:", response.data);
       toast.success("Registration successful!"); // Show success toast
-      
-      
     } catch (error) {
       console.error("Registration failed:", error.response.data.message);
       toast.error(
@@ -59,43 +62,6 @@ const StudentSignup = () => {
     }
   };
 
-  const TextInputField = ({ label, name, type = "text", placeholder }) => (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold">
-        {label}
-      </label>
-      <Field
-        type={type}
-        name={name}
-        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-        placeholder={placeholder}
-      />
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="text-red-500 text-sm"
-      />
-    </div>
-  );
-
-  const DateInputField = ({ label, name }) => (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold">
-        {label}
-      </label>
-      <Field
-        type="date"
-        name={name}
-        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-      />
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="text-red-500 text-sm"
-      />
-    </div>
-  );
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -105,7 +71,7 @@ const StudentSignup = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ setFieldValue, isSubmitting, errors }) => (
+          {({ isSubmitting, errors }) => (
             <Form className="space-y-6">
               <TextInputField
                 label="Username"
@@ -128,12 +94,18 @@ const StudentSignup = () => {
                 name="password"
                 type="password"
                 placeholder="********"
+                isPassword={true}
+                showPassword={showPassword}
+                toggleShowPassword={() => setShowPassword(!showPassword)}
               />
               <TextInputField
                 label="Confirm Password"
                 name="confirmPassword"
                 type="password"
                 placeholder="********"
+                isPassword={true}
+                showPassword={showConfirmPassword}
+                toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
               />
               <DateInputField
                 label="Date of Birth"

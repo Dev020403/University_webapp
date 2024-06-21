@@ -1,11 +1,16 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../redux/authSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
+
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     password: Yup.string().required("Password is required"),
@@ -15,21 +20,24 @@ const Login = () => {
     username: "",
     password: "",
   };
-
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/login",
-        values
-      );
-      console.log("Login successful:", response.data);
-      toast.success("Login successful!");
-    } catch (error) {
-      console.error("Login failed:", error.response.data.message);
-      toast.error("Login failed. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+  const navigate = useNavigate();
+  const handleSubmit = (values, { setSubmitting }) => {
+    dispatch(loginUser(values))
+      .unwrap()
+      .then((response) => {
+        toast.success("Login successful!");
+        if (response.role === "student") {
+          navigate("/student-dashboard/Dashboard");
+        } else if (response.role === "university") {
+          navigate("/university-dashboard/Dashboard");
+        }
+      })
+      .catch((errorMessage) => {
+        toast.error(`Login failed: ${errorMessage}`);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -78,19 +86,16 @@ const Login = () => {
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors w-full"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || loading}
               >
-                Submit
+                {isSubmitting || loading ? "Logging in..." : "Submit"}
               </button>
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             </Form>
           )}
         </Formik>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-      />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
 };

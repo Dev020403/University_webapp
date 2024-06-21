@@ -8,12 +8,21 @@ import {
   User,
 } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/authSlice";
 
 const Navbar = () => {
   const location = useLocation();
-  
-  // Get the last part of the pathname
-  const lastPathSegment = location.pathname.split("/").filter((segment) => segment !== "").pop();
+  const dispatch = useDispatch();
+
+  const lastPathSegment = location.pathname
+    .split("/")
+    .filter((segment) => segment !== "")
+    .pop();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className="bg-white shadow p-4 flex justify-between items-center mt-5 rounded-md">
@@ -44,9 +53,9 @@ const Navbar = () => {
                 <p className="font-bold">Signed in as</p>
                 <p className="font-bold">@tonyreichert</p>
               </DropdownItem>
-              <DropdownItem key="settings">My Profile</DropdownItem>
+              <DropdownItem key="profile">My Profile</DropdownItem>
               <DropdownItem key="settings">Settings</DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                 Log Out
               </DropdownItem>
             </DropdownMenu>

@@ -1,11 +1,15 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState } from "react";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TextInputField from "../../components/auth/TextInputField"; // Adjust the path as needed
 
 const UniversitySignup = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const validationSchema = Yup.object({
     username: Yup.string().required("Username is required"),
     email: Yup.string()
@@ -33,36 +37,17 @@ const UniversitySignup = () => {
         values
       );
       console.log("Registration successful:", response.data);
-      toast.success("University registration successful!"); // Show success toast
+      toast.success("University registration successful!");
     } catch (error) {
       console.error(
         "University registration failed:",
         error.response.data.message
       );
-      toast.error(error.response.data.message); // Show error toast
+      toast.error(error.response.data.message);
     } finally {
       setSubmitting(false);
     }
   };
-
-  const TextInputField = ({ label, name, type = "text", placeholder }) => (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold">
-        {label}
-      </label>
-      <Field
-        type={type}
-        name={name}
-        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-        placeholder={placeholder}
-      />
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="text-red-500 text-sm"
-      />
-    </div>
-  );
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
@@ -75,7 +60,7 @@ const UniversitySignup = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ setFieldValue, isSubmitting }) => (
+          {({ isSubmitting }) => (
             <Form className="space-y-6">
               <TextInputField
                 label="Username"
@@ -93,12 +78,18 @@ const UniversitySignup = () => {
                 name="password"
                 type="password"
                 placeholder="********"
+                isPassword={true}
+                showPassword={showPassword}
+                toggleShowPassword={() => setShowPassword(!showPassword)}
               />
               <TextInputField
                 label="Confirm Password"
                 name="confirmPassword"
                 type="password"
                 placeholder="********"
+                isPassword={true}
+                showPassword={showConfirmPassword}
+                toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
               />
               <TextInputField
                 label="University Name"
@@ -116,11 +107,7 @@ const UniversitySignup = () => {
           )}
         </Formik>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-      />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
 };

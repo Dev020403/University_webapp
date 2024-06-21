@@ -2,6 +2,7 @@ import React from "react";
 import UniversityLayout from "../../layout/UniversityLayout";
 import WelcomeCard from "../../components/WelcomeCard";
 import TableGrid from "../../components/TableGrid";
+import { useSelector } from "react-redux";
 
 const rows = [
   {
@@ -82,9 +83,10 @@ const columns = [
 ];
 
 const Dashboard = () => {
+  const userName = useSelector((state) => state.auth.user?.name || 'Guest');
   return (
     <UniversityLayout>
-      <WelcomeCard name={"Nirma University"}></WelcomeCard>
+      <WelcomeCard name={userName}></WelcomeCard>
       <TableGrid
         columns={columns}
         rows={rows}

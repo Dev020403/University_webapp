@@ -2,11 +2,13 @@ import React from "react";
 import StudentLayout from "../../layout/StudentLayout";
 import WelcomeCard from "../../components/WelcomeCard";
 import UniversityCard from "../../components/student/UniversityCard";
+import { useSelector } from "react-redux";
 
 const StudentDashboard = () => {
+  const userName = useSelector((state) => state.auth.user?.profile?.name || 'Guest');
   return (
     <StudentLayout>
-      <WelcomeCard name={"Dev"}></WelcomeCard>
+      <WelcomeCard name={userName}></WelcomeCard>
       <div className="bg-white rounded-md shadow-md">
         <div className="font-bold text-xl px-7 pt-5">
           Univerities of your interest
