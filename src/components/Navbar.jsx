@@ -7,18 +7,22 @@ import {
   DropdownTrigger,
   User,
 } from "@nextui-org/react";
-import { useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/authSlice";
 
 const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-
+  const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
   const lastPathSegment = location.pathname
     .split("/")
     .filter((segment) => segment !== "")
     .pop();
+  const handleProfileClick = () => {
+    navigate("/student-dashboard/profile");
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -44,16 +48,18 @@ const Navbar = () => {
                   src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
                 }}
                 className="transition-transform"
-                description="@tonyreichert"
-                name="Tony Reichert"
+                description={`@${user.username}`}
+                name={user.profile.name}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="User Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-bold">Signed in as</p>
-                <p className="font-bold">@tonyreichert</p>
+                <p className="font-bold">@{user.username}</p>
               </DropdownItem>
-              <DropdownItem key="profile">My Profile</DropdownItem>
+              <DropdownItem key="profile" onClick={handleProfileClick}>
+                My Profile
+              </DropdownItem>
               <DropdownItem key="settings">Settings</DropdownItem>
               <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                 Log Out

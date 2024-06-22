@@ -16,6 +16,7 @@ import StudentSignup from './pages/auth/StudentSignup';
 import UniversitySignup from './pages/auth/UniversitySignup';
 import ProtectedRoute from './utils/ProtectedRoute';
 import UniversityDetails from './components/UniversityDetails';
+import StudentProfile from './pages/student/StudentProfile';
 
 function App() {
   return (
@@ -30,12 +31,13 @@ function App() {
 
             {/* Student Routes */}
             <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-              <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/student-onboard' Component={StudentOnboardForm} />
+              <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/student-dashboard/Dashboard' Component={StudentDashboard} />
               <Route path='/student-dashboard/Universities' Component={UniversityList} />
               <Route path='/student-dashboard/Applications' Component={YourApplications} />
               <Route path='/student-dashboard/Setting' Component={StudentSetting} />
+              <Route path='//student-dashboard/profile' Component={StudentProfile} />
             </Route>
 
             {/* University Routes */}
