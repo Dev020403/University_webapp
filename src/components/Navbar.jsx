@@ -15,13 +15,17 @@ const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
   const navigate = useNavigate();
   const lastPathSegment = location.pathname
     .split("/")
     .filter((segment) => segment !== "")
     .pop();
   const handleProfileClick = () => {
-    navigate("/student-dashboard/profile");
+    if (role === "university") navigate("/university-dashboard/profile");
+    else {
+      navigate("/student-dashboard/profile");
+    }
   };
 
   const handleLogout = () => {
@@ -49,7 +53,7 @@ const Navbar = () => {
                 }}
                 className="transition-transform"
                 description={`@${user.username}`}
-                name={user.profile.name}
+                name={role === "university" ? user.name : user.profile.name}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="User Actions" variant="flat">
