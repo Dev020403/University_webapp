@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const UniversityCard = ({
+  id,
   coverImage,
   logo,
   name,
@@ -8,29 +10,54 @@ const UniversityCard = ({
   address,
   ratings,
 }) => {
+  const defaultCoverImage = "https://dummyimage.com/300";
+  const defaultLogo = "https://dummyimage.com/50x50";
+  const defaultName = "Unknown University";
+  const defaultDescription = "No description available";
+  const defaultAddress = "No address provided";
+  const defaultRatings = "N/A";
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    console.log("Clicked on university card", id);
+    navigate(`/university/${id}`);
+  };
+
   return (
-    <div className="h-72 bg-white shadow-lg rounded-lg overflow-hidden mx-2">
-      <div className="md:flex h-full">
-        <div className="md:flex-shrink-0">
-          <img
-            src={coverImage}
-            alt="cover"
-            className="w-full h-full object-cover md:w-48"
-          />
-        </div>
-        <div className="p-4 flex flex-col justify-between">
-          <div className="mb-2 flex">
+    <div
+      onClick={handleClick}
+      className="max-w-sm w-full lg:max-w-full lg:flex shadow-lg rounded-lg overflow-hidden mx-2 my-4"
+    >
+      <div className="flex-none h-64 lg:h-auto lg:w-48 relative">
+        <img
+          src={coverImage || defaultCoverImage}
+          alt="cover"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex flex-col justify-between p-4 leading-normal bg-white">
+        <div className="mb-4">
+          <div className="flex items-center">
             <img
-              src={logo}
+              src={logo || defaultLogo}
               alt="logo"
-              className="w-10 h-10 rounded-full mr-2"
+              className="w-12 h-12 rounded-full mr-4"
             />
-            <span className="font-bold text-xl ">{name}</span>
+            <div className="text-xl font-bold text-gray-900">
+              {name || defaultName}
+            </div>
           </div>
-          <p className="text-gray-700 text-base mb-4">{description}</p>
-          <p className="text-gray-600 text-sm mb-2">{address}</p>
-          <p className="text-gray-600 text-sm">Rating: {ratings}</p>
         </div>
+        <p className="text-gray-700 text-base mb-4">
+          {description || defaultDescription}
+        </p>
+        <p className="text-gray-600 text-sm mb-2">
+          {address || defaultAddress}
+        </p>
+        <p className="text-gray-600 text-sm">
+          Rating: {ratings || defaultRatings}
+        </p>
       </div>
     </div>
   );

@@ -1,48 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 import StudentLayout from "../../layout/StudentLayout";
 import UniversityCard from "../../components/student/UniversityCard";
 
 const UniversityList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [universities, setUniversities] = useState([]);
 
-  const universities = [
-    {
-      coverImage: "https://dummyimage.com/300",
-      name: "Example University 1",
-      description: "A leading institution in higher education. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      address: "123 University Street, City, Country",
-      ratings: 4.5,
-    },
-    {
-      coverImage: "https://dummyimage.com/300",
-      name: "Example University 2",
-      description: "Another leading institution in higher education. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      address: "456 College Avenue, City, Country",
-      ratings: 4.2,
-    },
-    {
-      coverImage: "https://dummyimage.com/300",
-      name: "Example University 3",
-      description: "Another leading institution in higher education. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      address: "456 College Avenue, City, Country",
-      ratings: 4.2,
-    },
-    {
-      coverImage: "https://dummyimage.com/300",
-      name: "Example University 4",
-      description: "Another leading institution in higher education. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      address: "456 College Avenue, City, Country",
-      ratings: 4.2,
-    },
-    {
-      coverImage: "https://dummyimage.com/300",
-      name: "Example University 5",
-      description: "Another leading institution in higher education. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      address: "456 College Avenue, City, Country",
-      ratings: 4.2,
-    },
-    // Add more universities here as needed
-  ];
+  const token = useSelector((state) => state.auth.token);
+
+  const fetchUniversities = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/universities",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data)
+      setUniversities(response.data);
+    } catch (error) {
+      console.error("Error fetching universities:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUniversities();
+  }, []);
 
   const filteredUniversities = universities.filter((university) =>
     university.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -64,14 +51,17 @@ const UniversityList = () => {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
-          {filteredUniversities.map((university, index) => (
+          {filteredUniversities.map((university) => (
             <UniversityCard
-              key={index}
-              coverImage={university.coverImage}
-              name={university.name}
-              description={university.description}
-              address={university.address}
-              ratings={university.ratings}
+              id={university._id}
+              key={university._id}
+              coverImage={university.coverPhoto || "https://dummyimage.com/300"}
+              name={university.name || "Unknown University"}
+              description={university.about || "No description available"}
+              address={
+                university.contactDetails?.address || "No address provided"
+              }
+              ratings={university.ratings || "N/A"}
             />
           ))}
         </div>

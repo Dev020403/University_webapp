@@ -15,6 +15,7 @@ import RoleSelection from './components/auth/RoleSelection';
 import StudentSignup from './pages/auth/StudentSignup';
 import UniversitySignup from './pages/auth/UniversitySignup';
 import ProtectedRoute from './utils/ProtectedRoute';
+import UniversityDetails from './components/UniversityDetails';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
 
             {/* Student Routes */}
             <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+              <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/student-onboard' Component={StudentOnboardForm} />
               <Route path='/student-dashboard/Dashboard' Component={StudentDashboard} />
               <Route path='/student-dashboard/Universities' Component={UniversityList} />
@@ -38,6 +40,7 @@ function App() {
 
             {/* University Routes */}
             <Route element={<ProtectedRoute allowedRoles={['university']} />}>
+              <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/university-onboard' Component={UniversityOnboardForm} />
               <Route path='/university-dashboard/Setting' Component={UniversitySetting} />
               <Route path='/university-dashboard/Application' Component={UniversityApplication} />
