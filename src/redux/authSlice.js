@@ -17,6 +17,10 @@ export const loginUser = createAsyncThunk(
         }
     }
 );
+export const updateUserProfile = (updatedUser) => ({
+    type: 'auth/updateUserProfile',
+    payload: updatedUser,
+});
 
 const authSlice = createSlice({
     name: 'auth',
@@ -32,6 +36,9 @@ const authSlice = createSlice({
             state.user = null;
             state.token = null;
             state.role = null;
+        },
+        updateUserProfile: (state, action) => {
+            state.user = action.payload;
         },
     },
     extraReducers: (builder) => {
