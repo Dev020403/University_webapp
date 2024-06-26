@@ -6,7 +6,6 @@ export const loginUser = createAsyncThunk(
     async ({ username, password }, { rejectWithValue }) => {
         try {
             const response = await axios.post('http://localhost:3000/api/login', { username, password });
-            console.log(response.data)
             return response.data;
         } catch (error) {
             if (error.response && error.response.data) {
@@ -17,10 +16,6 @@ export const loginUser = createAsyncThunk(
         }
     }
 );
-export const updateUserProfile = (updatedUser) => ({
-    type: 'auth/updateUserProfile',
-    payload: updatedUser,
-});
 
 const authSlice = createSlice({
     name: 'auth',
@@ -48,7 +43,6 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.loading = false;
                 state.token = action.payload.token;
                 state.role = action.payload.role;
@@ -61,6 +55,6 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, updateUserProfile } = authSlice.actions;
 
 export default authSlice.reducer;
