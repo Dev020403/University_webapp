@@ -22,7 +22,7 @@ const StudentDashboard = () => {
           },
         }
       );
-      setUniversities(response.data);
+      setUniversities(response.data.universities);
     } catch (error) {
       console.error("Error fetching universities:", error);
     }

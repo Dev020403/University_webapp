@@ -19,8 +19,7 @@ const Application = () => {
           },
         }
       );
-      console.log(response.data);
-      setApplications(response.data);
+      setApplications(response.data.applications);
     } catch (error) {
       console.error("Error fetching applications:", error);
     }

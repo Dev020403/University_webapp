@@ -20,8 +20,8 @@ const UniversityList = () => {
           },
         }
       );
-      console.log(response.data)
-      setUniversities(response.data);
+      // console.log(response.data)
+      setUniversities(response.data.universities);
     } catch (error) {
       console.error("Error fetching universities:", error);
     }
