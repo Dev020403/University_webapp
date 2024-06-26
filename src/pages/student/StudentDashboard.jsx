@@ -38,11 +38,12 @@ const StudentDashboard = () => {
         <div className="font-bold text-xl px-7 pt-5">
           Universities of your interest
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 p-5">
           {universities.map((university) => (
             <UniversityCard
               id={university._id}
               key={university._id}
+              logo={university.logo || "https://dummyimage.com/30"}
               coverImage={university.coverPhoto || "https://dummyimage.com/300"}
               name={university.name || "Unknown University"}
               description={university.about || "No description available"}

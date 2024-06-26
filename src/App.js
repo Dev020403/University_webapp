@@ -17,6 +17,7 @@ import UniversitySignup from './pages/auth/UniversitySignup';
 import ProtectedRoute from './utils/ProtectedRoute';
 import UniversityDetails from './components/UniversityDetails';
 import StudentProfile from './pages/student/StudentProfile';
+import UniversityProfile from './pages/university/UniversityProfile';
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
               <Route path='/student-dashboard/Universities' Component={UniversityList} />
               <Route path='/student-dashboard/Applications' Component={YourApplications} />
               <Route path='/student-dashboard/Setting' Component={StudentSetting} />
-              <Route path='//student-dashboard/profile' Component={StudentProfile} />
+              <Route path='/student-dashboard/profile' Component={StudentProfile} />
             </Route>
 
             {/* University Routes */}
@@ -47,6 +48,7 @@ function App() {
               <Route path='/university-dashboard/Setting' Component={UniversitySetting} />
               <Route path='/university-dashboard/Application' Component={UniversityApplication} />
               <Route path='/university-dashboard/Dashboard' Component={UniversityDashboard} />
+              <Route path='/university-dashboard/profile' Component={UniversityProfile} />
             </Route>
           </Routes>
         </BrowserRouter>

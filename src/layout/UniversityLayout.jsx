@@ -25,7 +25,7 @@ const UniversityLayout = ({ children }) => {
       <Sidebar logo="LOGO" navItems={navItems} />
       <div className="flex-1 flex flex-col mx-5 gap-5">
         <Navbar />
-        <div className="flex-1 space-y-5">
+        <div className="flex-1 space-y-5 h-full pb-5 overflow-y-auto">
           {children}
           <Outlet />
         </div>

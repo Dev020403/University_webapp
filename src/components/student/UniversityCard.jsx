@@ -27,7 +27,7 @@ const UniversityCard = ({
   return (
     <div
       onClick={handleClick}
-      className="max-w-sm w-full lg:max-w-full lg:flex shadow-lg rounded-lg overflow-hidden mx-2 my-4"
+      className="max-w-sm w-full lg:max-w-full lg:flex shadow-lg rounded-lg overflow-hidden mx-2 my-4 border border-gray-200 cursor-pointer "
     >
       <div className="flex-none h-64 lg:h-auto lg:w-48 relative">
         <img

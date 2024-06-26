@@ -21,13 +21,11 @@ const UniversityDetails = () => {
             },
           }
         );
-
         setUniversity(response.data);
       } catch (error) {
         console.error("Error fetching university details:", error);
       }
     };
-
     fetchUniversityDetails();
   }, [id, token]);
 
@@ -50,11 +48,13 @@ const UniversityDetails = () => {
             })`,
           }}
         >
-          <h1 className="text-4xl font-bold  px-4 py-2">{university.name}</h1>
+          <h1 className="text-4xl font-bold px-4 py-2 bg-black bg-opacity-50 rounded">
+            {university.name}
+          </h1>
         </div>
         <div className="flex justify-start mx-4 mt-6 space-x-8 border-b border-gray-300">
           <button
-            className={`pb-2 ${
+            className={`pb-2 focus:outline-none ${
               activeTab === "overview"
                 ? "border-b-2 border-blue-500 text-blue-500"
                 : "text-gray-500"
@@ -64,7 +64,7 @@ const UniversityDetails = () => {
             Overview
           </button>
           <button
-            className={`pb-2 ${
+            className={`pb-2 focus:outline-none ${
               activeTab === "courses"
                 ? "border-b-2 border-blue-500 text-blue-500"
                 : "text-gray-500"
@@ -74,70 +74,15 @@ const UniversityDetails = () => {
             Courses
           </button>
         </div>
-
         <div className="p-4">
           {activeTab === "overview" && (
             <div>
-              <section className="mb-6">
-                <h2 className="text-2xl font-bold mb-2">About</h2>
-                <p>{university.about ?? "No information available"}</p>
-              </section>
-              <section className="mb-6">
-                <h2 className="text-2xl font-bold mb-2">History</h2>
-                <p>{university.history ?? "No information available"}</p>
-              </section>
-              <section className="mb-6">
-                <h2 className="text-2xl font-bold mb-2">Mission</h2>
-                <p>{university.mission ?? "No information available"}</p>
-              </section>
-              <section className="mb-6">
-                <h2 className="text-2xl font-bold mb-2">Values</h2>
-                <p>{university.values ?? "No information available"}</p>
-              </section>
-              <section className="mb-6">
-                <h2 className="text-2xl font-bold mb-2">Contact Details</h2>
-                <p>
-                  Address:{" "}
-                  {university.contactDetails?.address ?? "Not specified"}
-                </p>
-                <p>
-                  Phone: {university.contactDetails?.phone ?? "Not specified"}
-                </p>
-                <p>
-                  Website:{" "}
-                  <a
-                    href={university.contactDetails?.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    {university.contactDetails?.website ?? "Not specified"}
-                  </a>
-                </p>
-              </section>
-              <section className="mb-6">
-                <h2 className="text-2xl font-bold mb-2">Placement Stats</h2>
-                <p>
-                  Percentage Placed:{" "}
-                  {university.placementStats?.percentagePlaced ??
-                    "Not available"}
-                  %
-                </p>
-                <p>
-                  Average Salary: $
-                  {university.placementStats?.avgSalary ?? "Not available"}
-                </p>
-                <p>
-                  Highest Salary: $
-                  {university.placementStats?.highestSalary ?? "Not available"}
-                </p>
-                <p>
-                  Top Recruiters:{" "}
-                  {university.placementStats?.topRecruiters?.length > 0
-                    ? university.placementStats.topRecruiters.join(", ")
-                    : "Not available"}
-                </p>
-              </section>
+              <Section title="About" content={university.about} />
+              <Section title="History" content={university.history} />
+              <Section title="Mission" content={university.mission} />
+              <Section title="Values" content={university.values} />
+              <ContactDetails contactDetails={university.contactDetails} />
+              <PlacementStats placementStats={university.placementStats} />
             </div>
           )}
           {activeTab === "courses" && (
@@ -159,5 +104,56 @@ const UniversityDetails = () => {
     </StudentLayout>
   );
 };
+
+const Section = ({ title, content }) => (
+  <section className="mb-6">
+    <h2 className="text-2xl font-bold mb-2">{title}</h2>
+    <p>{content ?? "No information available"}</p>
+  </section>
+);
+
+const ContactDetails = ({ contactDetails }) => (
+  <section className="mb-6">
+    <h2 className="text-2xl font-bold mb-2">Contact Details</h2>
+    <p>
+      Address: {contactDetails?.address ?? "Not specified"}
+    </p>
+    <p>
+      Phone: {contactDetails?.phone ?? "Not specified"}
+    </p>
+    <p>
+      Website:{" "}
+      <a
+        href={contactDetails?.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500 underline"
+      >
+        {contactDetails?.website ?? "Not specified"}
+      </a>
+    </p>
+  </section>
+);
+
+const PlacementStats = ({ placementStats }) => (
+  <section className="mb-6">
+    <h2 className="text-2xl font-bold mb-2">Placement Stats</h2>
+    <p>
+      Percentage Placed: {placementStats?.percentagePlaced ?? "Not available"}%
+    </p>
+    <p>
+      Average Salary: ${placementStats?.avgSalary ?? "Not available"}
+    </p>
+    <p>
+      Highest Salary: ${placementStats?.highestSalary ?? "Not available"}
+    </p>
+    <p>
+      Top Recruiters:{" "}
+      {placementStats?.topRecruiters?.length > 0
+        ? placementStats.topRecruiters.join(", ")
+        : "Not available"}
+    </p>
+  </section>
+);
 
 export default UniversityDetails;
