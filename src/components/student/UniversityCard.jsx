@@ -20,7 +20,6 @@ const UniversityCard = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log("Clicked on university card", id);
     navigate(`/university/${id}`);
   };
 
