@@ -93,7 +93,7 @@ const UniversityDetails = () => {
               ) : (
                 <ul className="list-disc list-inside">
                   {university.courses.map((course, index) => (
-                    <li key={index}>{course}</li>
+                    <li>{course.name}</li>
                   ))}
                 </ul>
               )}
