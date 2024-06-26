@@ -9,7 +9,7 @@ const StudentApplications = () => {
   const [applications, setApplications] = useState([]);
   const studentId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
-  const rowsPerPage = 12;
+  const rowsPerPage = 10;
 
   const fetchApplications = async () => {
     try {
