@@ -39,7 +39,12 @@ const Navbar = () => {
         <button className="focus:outline-none">
           <FaBell className="w-5 h-5 text-gray-600 hover:text-blue-800" />
         </button>
-        <button className="focus:outline-none">
+        <button
+          className="focus:outline-none"
+          onClick={() => {
+            navigate("/student-dashboard/setting");
+          }}
+        >
           <FaCog className="w-5 h-5 text-gray-600 hover:text-blue-800" />
         </button>
         <div className="relative">
@@ -64,7 +69,14 @@ const Navbar = () => {
               <DropdownItem key="profile" onClick={handleProfileClick}>
                 My Profile
               </DropdownItem>
-              <DropdownItem key="settings">Settings</DropdownItem>
+              <DropdownItem
+                key="settings"
+                onClick={() => {
+                  navigate("/student-dashboard/setting");
+                }}
+              >
+                Settings
+              </DropdownItem>
               <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                 Log Out
               </DropdownItem>
