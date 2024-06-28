@@ -18,6 +18,7 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import UniversityDetails from './components/UniversityDetails';
 import StudentProfile from './pages/student/StudentProfile';
 import UniversityProfile from './pages/university/UniversityProfile';
+import CourseDetails from './pages/student/CourseDetails';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route path='/student-dashboard/Applications' Component={YourApplications} />
               <Route path='/student-dashboard/Setting' Component={StudentSetting} />
               <Route path='/student-dashboard/profile' Component={StudentProfile} />
+              <Route path='/university/course-details/:id' Component={CourseDetails} />
             </Route>
 
             {/* University Routes */}
