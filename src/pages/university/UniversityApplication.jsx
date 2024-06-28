@@ -6,13 +6,16 @@ import { useSelector } from "react-redux";
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
 
-  const fetchApplications = async () => {
+  // Fetch applications data from the backend API
+  const fetchApplications = async (page = 1) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238`,
+        `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238?page=${page}&limit=${rowsPerPage}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -20,6 +23,8 @@ const Application = () => {
         }
       );
       setApplications(response.data.applications);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching applications:", error);
     }
@@ -27,11 +32,10 @@ const Application = () => {
 
   useEffect(() => {
     fetchApplications();
-  }, []);
+  }, []); // Fetch applications on component mount
 
   const handleStatusChange = async (applicationId, newStatus) => {
     try {
-      console.log(newStatus);
       // Optimistically update the status locally
       setApplications((prevApplications) =>
         prevApplications.map((application) =>
@@ -43,7 +47,7 @@ const Application = () => {
 
       // Update status on the server
       const response = await axios.put(
-        `http://localhost:3000/api/${applicationId}/status`,
+        `http://localhost:3000/api/applications/${applicationId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -67,38 +71,34 @@ const Application = () => {
     { key: "boardPr", label: "Board Percentile" },
   ];
 
-  const rows = applications.map((application, id) => ({
+  const getStatusSelect = (applicationId, currentStatus) => (
+    <select
+      value={currentStatus}
+      onChange={(e) => handleStatusChange(applicationId, e.target.value)}
+      aria-label="Select status"
+      placeholder="Select status"
+    >
+      <option value="submitted">Submitted</option>
+      <option value="underReview">Under Review</option>
+      <option value="accepted">Accepted</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  );
+
+  const rows = applications.map((application) => ({
     id: application._id,
     name: application.student.profile.name,
     email: application.student.email,
     contact: application.student.profile.personalInfo.phone,
-    status: (
-      // <Select
-      //   value={application.applicationStatus}
-      //   onChange={(e) => handleStatusChange(application._id, e.target)}
-      //   aria-label="Select status"
-      //   placeholder="Select status"
-      // >
-      //   <SelectItem value="submitted">Submitted</SelectItem>
-      //   <SelectItem value="underReview">Under Review</SelectItem>
-      //   <SelectItem value="accepted">Accepted</SelectItem>
-      //   <SelectItem value="rejected">Rejected</SelectItem>
-      // </Select>
-      <select
-        value={application.applicationStatus}
-        onChange={(e) => handleStatusChange(application._id, e.target.value)}
-        aria-label="Select status"
-        placeholder="Select status"
-      >
-        <option value="submitted">Submitted</option>
-        <option value="underReview">Under Review</option>
-        <option value="accepted">Accepted</option>
-        <option value="rejected">Rejected</option>
-      </select>
-    ),
+    status: getStatusSelect(application._id, application.applicationStatus),
     jeePr: application.student.profile.academicBackground.jeePr,
     boardPr: application.student.profile.academicBackground.boardPr,
   }));
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    fetchApplications(newPage);
+  };
 
   return (
     <UniversityLayout>
@@ -106,6 +106,9 @@ const Application = () => {
         columns={columns}
         rows={rows}
         rowsPerPage={rowsPerPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
         name={"Recent Applications"}
       />
     </UniversityLayout>

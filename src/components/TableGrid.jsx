@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -10,19 +10,16 @@ import {
   getKeyValue,
 } from "@nextui-org/react";
 
-const TableGrid = ({ rows, columns, rowsPerPage, recentApplication }) => {
-  const [page, setPage] = useState(1);
+const TableGrid = ({ rows, columns, currentPage, totalPages, onPageChange }) => {
+  const [page, setPage] = useState(currentPage || 1);
 
-  const pageCount = Math.ceil(rows.length / rowsPerPage);
-
-  const paginatedRows = useMemo(() => {
-    const startIndex = (page - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    return rows.slice(startIndex, endIndex);
-  }, [page, rows, rowsPerPage]);
+  useEffect(() => {
+    setPage(currentPage || 1);
+  }, [currentPage]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   return (
@@ -37,7 +34,7 @@ const TableGrid = ({ rows, columns, rowsPerPage, recentApplication }) => {
               showShadow
               color="primary"
               page={page}
-              total={pageCount}
+              total={totalPages}
               onChange={handlePageChange}
             />
           </div>
@@ -51,7 +48,7 @@ const TableGrid = ({ rows, columns, rowsPerPage, recentApplication }) => {
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={paginatedRows}>
+        <TableBody items={rows}>
           {(item, index) => (
             <TableRow key={item.id ?? index}>
               {columns.map((column) => (
