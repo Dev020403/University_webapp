@@ -42,9 +42,11 @@ const StudentSetting = () => {
         `http://localhost:3000/api/update-student/${userId}`,
         values
       );
-      console.log("API Response:", response.data);
-      dispatch(updateUserProfile(response.data));
-      toast.success("Data Updated Successfully!");
+      if (response.data) {
+        console.log("API Response:", response.data);
+        dispatch(updateUserProfile(response.data));
+        toast.success("Data Updated Successfully!");
+      }
     } catch (err) {
       console.error("Update failed:", err);
       toast.error(

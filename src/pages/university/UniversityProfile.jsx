@@ -46,7 +46,7 @@ const UniversityProfile = () => {
           ></div>
         </div>
 
-        <div className="px-6 py-4">
+        <div className="px-6 py-2">
           <Section title="About" content={about} />
           <Section title="History" content={history} />
           <Section title="Mission" content={mission} />
@@ -54,10 +54,10 @@ const UniversityProfile = () => {
 
           <div className="border-t border-gray-200">
             <div className="py-4">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              <h2 className="text-xl font-semibold text-gray-800 ">
                 Contact Details
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 py-2">
                 <ContactDetail
                   label="Address"
                   value={contactDetails?.address}
@@ -85,7 +85,7 @@ const UniversityProfile = () => {
               <h2 className="text-xl font-semibold text-gray-800 mb-2">
                 Placement Stats
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 ">
                 <PlacementDetail
                   label="Percentage Placed"
                   value={`${
@@ -133,7 +133,7 @@ const UniversityProfile = () => {
 };
 
 const Section = ({ title, content }) => (
-  <section className="mb-6 border-t border-gray-200 py-4">
+  <section className="mb-6 border-t border-gray-200 py-2">
     <h2 className="text-xl font-semibold text-gray-800 mb-2">{title}</h2>
     <p>{content ?? "No information available"}</p>
   </section>
