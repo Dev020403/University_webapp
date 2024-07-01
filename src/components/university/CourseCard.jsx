@@ -1,8 +1,18 @@
-import { Button } from "@nextui-org/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Input,
+  Textarea,
+} from "@nextui-org/react";
 
 const CourseCard = ({ course, onEdit, onDelete }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [formData, setFormData] = useState({
     name: course.name,
     description: course.description,
@@ -11,131 +21,122 @@ const CourseCard = ({ course, onEdit, onDelete }) => {
     resources: course.resources.join(", "),
   });
 
+  useEffect(() => {
+    // Update formData when course prop changes
+    setFormData({
+      name: course.name,
+      description: course.description,
+      feeStructure: course.feeStructure,
+      facilities: course.facilities.join(", "),
+      resources: course.resources.join(", "),
+    });
+  }, [course]);
+
   const handleEditChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
+  const handleEditSubmit = () => {
     onEdit(course._id, formData);
-    setIsEditing(false);
+    onOpenChange(false);
+  };
+
+  const handleModalChange = (isOpen) => {
+    if (!isOpen) {
+      // Reset form data to original course data when modal is closed
+      setFormData({
+        name: course.name,
+        description: course.description,
+        feeStructure: course.feeStructure,
+        facilities: course.facilities.join(", "),
+        resources: course.resources.join(", "),
+      });
+    }
+    onOpenChange(isOpen);
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden border-1">
-      {isEditing ? (
-        <form onSubmit={handleEditSubmit} className="p-4">
-          <label
-            className="block mb-2 text-sm font-medium text-gray-700"
-            htmlFor="name"
-          >
-            Course Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={formData.name}
-            onChange={handleEditChange}
-            className="block w-full mb-4 p-2 border border-gray-300 rounded"
-            placeholder="Course Name"
-          />
+    <div className="bg-white shadow-md rounded-lg overflow-hidden border-1 p-4">
+      <h3 className="text-xl font-semibold mb-2">{course.name}</h3>
+      <p className="text-gray-700 mb-4">{course.description}</p>
+      <p className="text-gray-900 font-bold mb-2">
+        Fee: ${course.feeStructure}
+      </p>
+      <p className="text-gray-700 mb-2">
+        Facilities: {course.facilities.join(", ")}
+      </p>
+      <p className="text-gray-700 mb-4">
+        Resources: {course.resources.join(", ")}
+      </p>
+      <Button color="primary" className="mr-2" onPress={onOpen}>
+        Edit
+      </Button>
+      <Button color="danger" onPress={() => onDelete(course._id)}>
+        Delete
+      </Button>
 
-          <label
-            className="block mb-2 text-sm font-medium text-gray-700"
-            htmlFor="description"
-          >
-            Course Description
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            value={formData.description}
-            onChange={handleEditChange}
-            className="block w-full mb-4 p-2 border border-gray-300 rounded"
-            placeholder="Course Description"
-          />
-
-          <label
-            className="block mb-2 text-sm font-medium text-gray-700"
-            htmlFor="feeStructure"
-          >
-            Fee Structure
-          </label>
-          <input
-            type="number"
-            name="feeStructure"
-            id="feeStructure"
-            value={formData.feeStructure}
-            onChange={handleEditChange}
-            className="block w-full mb-4 p-2 border border-gray-300 rounded"
-            placeholder="Fee Structure"
-          />
-
-          <label
-            className="block mb-2 text-sm font-medium text-gray-700"
-            htmlFor="facilities"
-          >
-            Facilities (comma separated)
-          </label>
-          <input
-            type="text"
-            name="facilities"
-            id="facilities"
-            value={formData.facilities}
-            onChange={handleEditChange}
-            className="block w-full mb-4 p-2 border border-gray-300 rounded"
-            placeholder="Facilities (comma separated)"
-          />
-
-          <label
-            className="block mb-2 text-sm font-medium text-gray-700"
-            htmlFor="resources"
-          >
-            Resources (comma separated)
-          </label>
-          <input
-            type="text"
-            name="resources"
-            id="resources"
-            value={formData.resources}
-            onChange={handleEditChange}
-            className="block w-full mb-4 p-2 border border-gray-300 rounded"
-            placeholder="Resources (comma separated)"
-          />
-
-          <Button color="primary" type="submit" className="mr-2">
-            Save
-          </Button>
-          <Button
-            color="default"
-            type="button"
-            onClick={() => setIsEditing(false)}
-          >
-            Cancel
-          </Button>
-        </form>
-      ) : (
-        <div className="p-4">
-          <h3 className="text-xl font-semibold mb-2">{course.name}</h3>
-          <p className="text-gray-700 mb-4">{course.description}</p>
-          <p className="text-gray-900 font-bold mb-2">
-            Fee: ${course.feeStructure}
-          </p>
-          <p className="text-gray-700 mb-2">
-            Facilities: {course.facilities.join(", ")}
-          </p>
-          <p className="text-gray-700 mb-4">
-            Resources: {course.resources.join(", ")}
-          </p>
-          <Button color="primary" className="mr-2" onClick={() => setIsEditing(true)}>
-            Edit
-          </Button>
-          <Button color="danger" onClick={() => onDelete(course._id)}>
-            Delete
-          </Button>
-        </div>
-      )}
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={handleModalChange}
+        placement="center"
+        size="3xl"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Edit Course
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  label="Course Name"
+                  placeholder="Enter course name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleEditChange}
+                />
+                <Textarea
+                  label="Description"
+                  placeholder="Enter course description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleEditChange}
+                />
+                <Input
+                  label="Fee Structure"
+                  placeholder="Enter fee structure"
+                  name="feeStructure"
+                  value={formData.feeStructure}
+                  onChange={handleEditChange}
+                  type="number"
+                />
+                <Input
+                  label="Facilities (comma separated)"
+                  placeholder="Enter facilities"
+                  name="facilities"
+                  value={formData.facilities}
+                  onChange={handleEditChange}
+                />
+                <Input
+                  label="Resources (comma separated)"
+                  placeholder="Enter resources"
+                  name="resources"
+                  value={formData.resources}
+                  onChange={handleEditChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={handleEditSubmit}>
+                  Save Changes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

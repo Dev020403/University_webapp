@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../auth/TextInputField";
 import { Button } from "@nextui-org/react";
@@ -63,7 +63,7 @@ const CreateCourseModal = ({ showModal, setShowModal, fetchCourses }) => {
     <>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white w-1/2 rounded-lg shadow-lg">
+          <div className="bg-white w-1/2 rounded-lg shadow-lg max-h-screen overflow-y-auto">
             <div className="p-4">
               <h2 className="text-xl font-bold mb-4">Create New Course</h2>
               <Formik
