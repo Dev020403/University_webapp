@@ -38,6 +38,7 @@ const StudentApplications = () => {
   useEffect(() => {
     fetchApplications();
   }, [studentId]);
+
   const columns = [
     { key: "universityName", label: "University Name" },
     { key: "courseName", label: "Course Name" },
@@ -73,8 +74,10 @@ const StudentApplications = () => {
   // Map applications data to rows for TableGrid component
   const rows = applications.map((application) => ({
     id: application._id,
-    universityName: application.university.name,
-    courseName: application.course.name,
+    universityName: application.university
+      ? application.university.name
+      : "Unknown",
+    courseName: application.course ? application.course.name : "Unknown",
     applicationStatus: getStatusBadge(application.applicationStatus),
     submissionDate: new Date(application.submissionDate).toLocaleDateString(),
   }));
