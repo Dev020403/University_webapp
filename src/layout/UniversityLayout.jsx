@@ -1,7 +1,7 @@
 // src/layout/DashboardLayout.js
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { FaTachometerAlt, FaAppStore, FaCog } from "react-icons/fa";
+import { FaTachometerAlt, FaAppStore, FaCog, FaBookOpen } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
@@ -16,6 +16,7 @@ const navItems = [
     label: "Applications",
     icon: FaAppStore,
   },
+  { to: "/university-dashboard/courses", label: "Courses", icon: FaBookOpen },
   { to: "/university-dashboard/setting", label: "Settings", icon: FaCog },
 ];
 

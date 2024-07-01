@@ -19,6 +19,7 @@ import UniversityDetails from './components/UniversityDetails';
 import StudentProfile from './pages/student/StudentProfile';
 import UniversityProfile from './pages/university/UniversityProfile';
 import CourseDetails from './pages/student/CourseDetails';
+import UniversityCourses from './pages/university/UniversityCourses';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
               <Route path='/university-dashboard/Application' Component={UniversityApplication} />
               <Route path='/university-dashboard/Dashboard' Component={UniversityDashboard} />
               <Route path='/university-dashboard/profile' Component={UniversityProfile} />
+              <Route path='/university-dashboard/courses' Component={UniversityCourses} />
             </Route>
           </Routes>
         </BrowserRouter>

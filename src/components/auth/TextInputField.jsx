@@ -1,6 +1,6 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const TextInputField = ({
   label,
@@ -9,7 +9,7 @@ const TextInputField = ({
   placeholder,
   isPassword = false,
   showPassword,
-  toggleShowPassword
+  toggleShowPassword,
 }) => (
   <div className="flex flex-col gap-2">
     <label htmlFor={name} className="font-semibold">
