@@ -7,6 +7,7 @@ import { Chip } from "@nextui-org/react";
 
 const StudentApplications = () => {
   const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const studentId = useSelector((state) => state.auth.user._id);
@@ -14,6 +15,7 @@ const StudentApplications = () => {
   const rowsPerPage = 10;
 
   const fetchApplications = async (page = 1) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:3000/api/student-applications/${studentId}?page=${page}&limit=${rowsPerPage}`,
@@ -28,6 +30,8 @@ const StudentApplications = () => {
       setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching applications:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,6 +87,7 @@ const StudentApplications = () => {
   return (
     <StudentLayout>
       <TableGrid
+        loading={loading}
         rows={rows}
         columns={columns}
         currentPage={currentPage}

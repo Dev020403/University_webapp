@@ -4,6 +4,7 @@ import StudentLayout from "../../layout/StudentLayout";
 import WelcomeCard from "../../components/WelcomeCard";
 import UniversityCard from "../../components/student/UniversityCard";
 import { useSelector } from "react-redux";
+import { Spinner } from "@nextui-org/react";
 
 const StudentDashboard = () => {
   const userName = useSelector(
@@ -13,8 +14,10 @@ const StudentDashboard = () => {
   const [universities, setUniversities] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false); 
 
-  const fetchUniversities = async (page = 1,limit = 5) => {
+  const fetchUniversities = async (page = 1, limit = 2) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:3000/api/universities?page=${page}&limit=${limit}`,
@@ -28,6 +31,8 @@ const StudentDashboard = () => {
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error("Error fetching universities:", error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -42,22 +47,30 @@ const StudentDashboard = () => {
         <div className="font-bold text-xl px-7 pt-5">
           Universities of your interest
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 p-5">
-          {universities.map((university) => (
-            <UniversityCard
-              id={university._id}
-              key={university._id}
-              logo={university.logo || "https://dummyimage.com/30"}
-              coverImage={university.coverPhoto || "https://dummyimage.com/300"}
-              name={university.name || "Unknown University"}
-              description={university.about || "No description available"}
-              address={
-                university.contactDetails?.address || "No address provided"
-              }
-              ratings={university.ratings || "N/A"}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-96">
+            <Spinner />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 p-5">
+            {universities.map((university) => (
+              <UniversityCard
+                id={university._id}
+                key={university._id}
+                logo={university.logo || "https://dummyimage.com/30"}
+                coverImage={
+                  university.coverPhoto || "https://dummyimage.com/300"
+                }
+                name={university.name || "Unknown University"}
+                description={university.about || "No description available"}
+                address={
+                  university.contactDetails?.address || "No address provided"
+                }
+                ratings={university.ratings || "N/A"}
+              />
+            ))}
+          </div>
+        )}
         <div className="flex justify-between items-center p-5">
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
