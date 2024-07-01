@@ -32,6 +32,11 @@ const TableGrid = ({
 
   return (
     <>
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <Spinner color="primary" />
+        </div>
+      ) : (
         <Table
           aria-label="Example table with dynamic content"
           bottomContent={
@@ -68,6 +73,7 @@ const TableGrid = ({
             )}
           </TableBody>
         </Table>
+      )}
     </>
   );
 };

@@ -9,6 +9,7 @@ import { Spinner } from "@nextui-org/react";
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
+  const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingStatuses, setLoadingStatuses] = useState({});
@@ -18,6 +19,7 @@ const Application = () => {
   // Fetch applications data from the backend API
   const fetchApplications = async (page = 1) => {
     try {
+      setloading(true);
       const response = await axios.get(
         `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238?page=${page}&limit=${rowsPerPage}`,
         {
@@ -31,6 +33,8 @@ const Application = () => {
       setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching applications:", error);
+    } finally {
+      setloading(false);
     }
   };
 
@@ -45,7 +49,7 @@ const Application = () => {
         ...prevStatuses,
         [applicationId]: true,
       }));
-      
+
       // Optimistically update the status locally
       setApplications((prevApplications) =>
         prevApplications.map((application) =>
@@ -143,6 +147,7 @@ const Application = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
         name={"Recent Applications"}
+        loading = {loading}
       />
       <ToastContainer />
     </UniversityLayout>
