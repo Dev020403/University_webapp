@@ -3,11 +3,15 @@ import axios from "axios";
 import UniversityLayout from "../../layout/UniversityLayout";
 import TableGrid from "../../components/TableGrid";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Spinner } from "@nextui-org/react";
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loadingStatuses, setLoadingStatuses] = useState({});
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
 
@@ -36,6 +40,12 @@ const Application = () => {
 
   const handleStatusChange = async (applicationId, newStatus) => {
     try {
+      // Set loading state to true for this application
+      setLoadingStatuses((prevStatuses) => ({
+        ...prevStatuses,
+        [applicationId]: true,
+      }));
+      
       // Optimistically update the status locally
       setApplications((prevApplications) =>
         prevApplications.map((application) =>
@@ -47,7 +57,7 @@ const Application = () => {
 
       // Update status on the server
       const response = await axios.put(
-        `http://localhost:3000/api/applications/${applicationId}/status`,
+        `http://localhost:3000/api/${applicationId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -55,9 +65,24 @@ const Application = () => {
           },
         }
       );
-      console.log(response);
+
+      if (response.status === 200) {
+        toast.success("Application status updated successfully");
+      }
+
+      // Set loading state to false for this application
+      setLoadingStatuses((prevStatuses) => ({
+        ...prevStatuses,
+        [applicationId]: false,
+      }));
     } catch (error) {
       console.error("Error updating application status:", error);
+
+      // Set loading state to false for this application
+      setLoadingStatuses((prevStatuses) => ({
+        ...prevStatuses,
+        [applicationId]: false,
+      }));
     }
   };
 
@@ -72,17 +97,25 @@ const Application = () => {
   ];
 
   const getStatusSelect = (applicationId, currentStatus) => (
-    <select
-      value={currentStatus}
-      onChange={(e) => handleStatusChange(applicationId, e.target.value)}
-      aria-label="Select status"
-      placeholder="Select status"
-    >
-      <option value="submitted">Submitted</option>
-      <option value="underReview">Under Review</option>
-      <option value="accepted">Accepted</option>
-      <option value="rejected">Rejected</option>
-    </select>
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <select
+        value={currentStatus}
+        onChange={(e) => handleStatusChange(applicationId, e.target.value)}
+        aria-label="Select status"
+        placeholder="Select status"
+        disabled={loadingStatuses[applicationId]}
+      >
+        <option value="submitted">Submitted</option>
+        <option value="underReview">Under Review</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      {loadingStatuses[applicationId] && (
+        <div className="loader">
+          <Spinner></Spinner>
+        </div>
+      )}
+    </div>
   );
 
   const rows = applications.map((application) => ({
@@ -111,6 +144,7 @@ const Application = () => {
         onPageChange={handlePageChange}
         name={"Recent Applications"}
       />
+      <ToastContainer />
     </UniversityLayout>
   );
 };
