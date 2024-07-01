@@ -21,6 +21,9 @@ const Navbar = () => {
     .split("/")
     .filter((segment) => segment !== "")
     .pop();
+
+  const capitalizedSegment =
+    lastPathSegment.charAt(0).toUpperCase() + lastPathSegment.slice(1);
   const handleProfileClick = () => {
     if (role === "university") navigate("/university-dashboard/profile");
     else {
@@ -34,7 +37,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-white shadow p-4 flex justify-between items-center mt-5 rounded-md">
-      <div className="font-bold text-xl px-4">{lastPathSegment}</div>
+      <div className="font-bold text-xl px-4">{capitalizedSegment}</div>
       <div className="flex items-center space-x-4">
         <button className="focus:outline-none">
           <FaBell className="w-5 h-5 text-gray-600 hover:text-blue-800" />
