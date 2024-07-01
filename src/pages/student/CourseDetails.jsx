@@ -16,7 +16,9 @@ const CourseDetails = () => {
 
   const fetchCourseData = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/course/${id}`);
+      const res = await axios.get(`http://localhost:3000/api/course/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setCourse(res.data);
     } catch (e) {
       console.error(e);
@@ -68,7 +70,8 @@ const CourseDetails = () => {
           <h1 className="text-3xl font-bold mb-4">{course.name}</h1>
           <p className="text-gray-700 mb-4">{course.description}</p>
           <div className="mb-4">
-            <span className="font-semibold">Fee Structure:</span> ${course.feeStructure}
+            <span className="font-semibold">Fee Structure:</span> $
+            {course.feeStructure}
           </div>
           <div className="mb-4">
             <span className="font-semibold">Facilities:</span>
