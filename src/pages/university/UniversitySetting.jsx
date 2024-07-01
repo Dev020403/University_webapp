@@ -34,7 +34,6 @@ const validationSchema = Yup.object().shape({
 const UniversitySettings = () => {
   const university = useSelector((state) => state.auth.user);
   const id = university._id;
-  const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
   const initialValues = {

@@ -24,11 +24,15 @@ const Navbar = () => {
 
   const capitalizedSegment =
     lastPathSegment.charAt(0).toUpperCase() + lastPathSegment.slice(1);
+
   const handleProfileClick = () => {
     if (role === "university") navigate("/university-dashboard/profile");
-    else {
-      navigate("/student-dashboard/profile");
-    }
+    else navigate("/student-dashboard/profile");
+  };
+
+  const handleSettingsClick = () => {
+    if (role === "university") navigate("/university-dashboard/setting");
+    else navigate("/student-dashboard/setting");
   };
 
   const handleLogout = () => {
@@ -44,9 +48,7 @@ const Navbar = () => {
         </button>
         <button
           className="focus:outline-none"
-          onClick={() => {
-            navigate("/student-dashboard/setting");
-          }}
+          onClick={handleSettingsClick}
         >
           <FaCog className="w-5 h-5 text-gray-600 hover:text-blue-800" />
         </button>
@@ -74,9 +76,7 @@ const Navbar = () => {
               </DropdownItem>
               <DropdownItem
                 key="settings"
-                onClick={() => {
-                  navigate("/student-dashboard/setting");
-                }}
+                onClick={handleSettingsClick}
               >
                 Settings
               </DropdownItem>
