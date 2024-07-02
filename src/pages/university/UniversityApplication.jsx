@@ -108,6 +108,7 @@ const Application = () => {
         aria-label="Select status"
         placeholder="Select status"
         disabled={loadingStatuses[applicationId]}
+        className="block w-full px-3 py-2 mt-1 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <option value="submitted">Submitted</option>
         <option value="underReview">Under Review</option>
@@ -147,7 +148,7 @@ const Application = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
         name={"Recent Applications"}
-        loading = {loading}
+        loading={loading}
       />
       <ToastContainer />
     </UniversityLayout>
