@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 import {
   Button,
   Modal,
@@ -11,130 +13,224 @@ import {
   Textarea,
 } from "@nextui-org/react";
 
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Course name is required"),
+  description: Yup.string().required("Description is required"),
+  feeStructure: Yup.number()
+    .positive("Fee must be positive")
+    .required("Fee is required"),
+  facilities: Yup.string().required("Facilities are required"),
+  resources: Yup.string().required("Resources are required"),
+});
+
 const CourseCard = ({ course, onEdit, onDelete }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [formData, setFormData] = useState({
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+  const initialValues = {
     name: course.name,
     description: course.description,
     feeStructure: course.feeStructure,
     facilities: course.facilities.join(", "),
     resources: course.resources.join(", "),
-  });
-
-  useEffect(() => {
-    // Update formData when course prop changes
-    setFormData({
-      name: course.name,
-      description: course.description,
-      feeStructure: course.feeStructure,
-      facilities: course.facilities.join(", "),
-      resources: course.resources.join(", "),
-    });
-  }, [course]);
-
-  const handleEditChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleEditSubmit = () => {
-    onEdit(course._id, formData);
+  const handleEditSubmit = (values, { setSubmitting }) => {
+    onEdit(course._id, {
+      ...values,
+      facilities: values.facilities.split(",").map(item => item.trim()),
+      resources: values.resources.split(",").map(item => item.trim()),
+    });
+    setSubmitting(false);
     onOpenChange(false);
   };
 
-  const handleModalChange = (isOpen) => {
-    if (!isOpen) {
-      // Reset form data to original course data when modal is closed
-      setFormData({
-        name: course.name,
-        description: course.description,
-        feeStructure: course.feeStructure,
-        facilities: course.facilities.join(", "),
-        resources: course.resources.join(", "),
-      });
-    }
-    onOpenChange(isOpen);
+  const handleDeleteConfirm = () => {
+    onDelete(course._id);
+    setConfirmDeleteOpen(false);
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden border-1 p-4">
-      <h3 className="text-xl font-semibold mb-2">{course.name}</h3>
-      <p className="text-gray-700 mb-4">{course.description}</p>
-      <p className="text-gray-900 font-bold mb-2">
-        Fee: ${course.feeStructure}
-      </p>
-      <p className="text-gray-700 mb-2">
-        Facilities: {course.facilities.join(", ")}
-      </p>
-      <p className="text-gray-700 mb-4">
-        Resources: {course.resources.join(", ")}
-      </p>
-      <Button color="primary" className="mr-2" onPress={onOpen}>
-        Edit
-      </Button>
-      <Button color="danger" onPress={() => onDelete(course._id)}>
-        Delete
-      </Button>
+    <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200 p-6 transition-all duration-300 hover:shadow-xl">
+      <h3 className="text-2xl font-bold mb-3 text-blue-900">{course.name}</h3>
+      <p className="text-gray-600 mb-4 line-clamp-3">{course.description}</p>
+      <div className="space-y-2 mb-4">
+        <p className="text-gray-800 font-semibold">
+          Fee: <span className="text-green-600">${course.feeStructure}</span>
+        </p>
+        <p className="text-gray-700">
+          <span className="font-semibold">Facilities:</span>{" "}
+          {course.facilities.join(", ")}
+        </p>
+        <p className="text-gray-700">
+          <span className="font-semibold">Resources:</span>{" "}
+          {course.resources.join(", ")}
+        </p>
+      </div>
+      <div className="flex gap-3">
+        <Button
+          color="primary"
+          variant="flat"
+          className="flex-1 font-semibold"
+          onPress={onOpen}
+        >
+          Edit Course
+        </Button>
+        <Button
+          color="danger"
+          variant="flat"
+          className="flex-1 font-semibold"
+          onPress={() => setConfirmDeleteOpen(true)}
+        >
+          Delete Course
+        </Button>
+      </div>
 
+      {/* Edit modal */}
       <Modal
         isOpen={isOpen}
-        onOpenChange={handleModalChange}
+        onOpenChange={onOpenChange}
         placement="center"
         size="3xl"
       >
-        <ModalContent>
+        <ModalContent className="bg-white">
           {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Edit Course
-              </ModalHeader>
-              <ModalBody>
-                <Input
-                  label="Course Name"
-                  placeholder="Enter course name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleEditChange}
-                />
-                <Textarea
-                  label="Description"
-                  placeholder="Enter course description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleEditChange}
-                />
-                <Input
-                  label="Fee Structure"
-                  placeholder="Enter fee structure"
-                  name="feeStructure"
-                  value={formData.feeStructure}
-                  onChange={handleEditChange}
-                  type="number"
-                />
-                <Input
-                  label="Facilities (comma separated)"
-                  placeholder="Enter facilities"
-                  name="facilities"
-                  value={formData.facilities}
-                  onChange={handleEditChange}
-                />
-                <Input
-                  label="Resources (comma separated)"
-                  placeholder="Enter resources"
-                  name="resources"
-                  value={formData.resources}
-                  onChange={handleEditChange}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Cancel
-                </Button>
-                <Button color="primary" onPress={handleEditSubmit}>
-                  Save Changes
-                </Button>
-              </ModalFooter>
-            </>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleEditSubmit}
+            >
+              {({ errors, touched, isSubmitting }) => (
+                <Form>
+                  <ModalHeader className="text-2xl font-bold mb-4">
+                    Edit Course
+                  </ModalHeader>
+                  <ModalBody>
+                    <div className="mb-4">
+                      <Field name="name">
+                        {({ field }) => (
+                          <Input
+                            {...field}
+                            label="Course Name"
+                            placeholder="Enter course name"
+                            isInvalid={touched.name && errors.name}
+                            errorMessage={touched.name && errors.name}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className="mb-4">
+                      <Field name="description">
+                        {({ field }) => (
+                          <Textarea
+                            {...field}
+                            label="Description"
+                            placeholder="Enter course description"
+                            isInvalid={touched.description && errors.description}
+                            errorMessage={touched.description && errors.description}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className="mb-4">
+                      <Field name="feeStructure">
+                        {({ field }) => (
+                          <Input
+                            {...field}
+                            type="number"
+                            label="Fee Structure"
+                            placeholder="Enter fee structure"
+                            isInvalid={touched.feeStructure && errors.feeStructure}
+                            errorMessage={touched.feeStructure && errors.feeStructure}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className="mb-4">
+                      <Field name="facilities">
+                        {({ field }) => (
+                          <Input
+                            {...field}
+                            label="Facilities (comma separated)"
+                            placeholder="Enter facilities"
+                            isInvalid={touched.facilities && errors.facilities}
+                            errorMessage={touched.facilities && errors.facilities}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className="mb-4">
+                      <Field name="resources">
+                        {({ field }) => (
+                          <Input
+                            {...field}
+                            label="Resources (comma separated)"
+                            placeholder="Enter resources"
+                            isInvalid={touched.resources && errors.resources}
+                            errorMessage={touched.resources && errors.resources}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button
+                      color="danger"
+                      variant="light"
+                      className="flex-1 font-semibold"
+                      onPress={onClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="primary"
+                      className="flex-1 font-semibold"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      Save Changes
+                    </Button>
+                  </ModalFooter>
+                </Form>
+              )}
+            </Formik>
           )}
+        </ModalContent>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        placement="center"
+        size="xs"
+      >
+        <ModalContent className="bg-white">
+          <ModalHeader className="text-2xl font-bold mb-4">
+            Confirm Delete
+          </ModalHeader>
+          <ModalBody>
+            <p className="text-gray-700">
+              Are you sure you want to delete <strong>{course.name}</strong>?
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="danger"
+              variant="light"
+              className="flex-1 font-semibold"
+              onPress={() => setConfirmDeleteOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              className="flex-1 font-semibold"
+              onPress={handleDeleteConfirm}
+            >
+              Confirm Delete
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </div>
