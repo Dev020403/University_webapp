@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
@@ -36,11 +36,7 @@ const CourseCard = ({ course, onEdit, onDelete }) => {
   };
 
   const handleEditSubmit = (values, { setSubmitting }) => {
-    onEdit(course._id, {
-      ...values,
-      facilities: values.facilities.split(",").map(item => item.trim()),
-      resources: values.resources.split(",").map(item => item.trim()),
-    });
+    onEdit(course._id, values);
     setSubmitting(false);
     onOpenChange(false);
   };
@@ -85,8 +81,7 @@ const CourseCard = ({ course, onEdit, onDelete }) => {
           Delete Course
         </Button>
       </div>
-
-      {/* Edit modal */}
+      {/*Edit modal */}
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -107,70 +102,70 @@ const CourseCard = ({ course, onEdit, onDelete }) => {
                   </ModalHeader>
                   <ModalBody>
                     <div className="mb-4">
-                      <Field name="name">
-                        {({ field }) => (
-                          <Input
-                            {...field}
-                            label="Course Name"
-                            placeholder="Enter course name"
-                            isInvalid={touched.name && errors.name}
-                            errorMessage={touched.name && errors.name}
-                          />
-                        )}
-                      </Field>
+                      <Field
+                        as={Input}
+                        label="Course Name"
+                        name="name"
+                        placeholder="Enter course name"
+                      />
+                      {errors.name && touched.name && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.name}
+                        </div>
+                      )}
                     </div>
                     <div className="mb-4">
-                      <Field name="description">
-                        {({ field }) => (
-                          <Textarea
-                            {...field}
-                            label="Description"
-                            placeholder="Enter course description"
-                            isInvalid={touched.description && errors.description}
-                            errorMessage={touched.description && errors.description}
-                          />
-                        )}
-                      </Field>
+                      <Field
+                        as={Textarea}
+                        label="Description"
+                        name="description"
+                        placeholder="Enter course description"
+                      />
+                      {errors.description && touched.description && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.description}
+                        </div>
+                      )}
                     </div>
                     <div className="mb-4">
-                      <Field name="feeStructure">
-                        {({ field }) => (
-                          <Input
-                            {...field}
-                            type="number"
-                            label="Fee Structure"
-                            placeholder="Enter fee structure"
-                            isInvalid={touched.feeStructure && errors.feeStructure}
-                            errorMessage={touched.feeStructure && errors.feeStructure}
-                          />
-                        )}
-                      </Field>
+                      <Field
+                        as={Input}
+                        label="Fee Structure"
+                        name="feeStructure"
+                        placeholder="Enter fee structure"
+                        type="number"
+                      />
+                      {errors.feeStructure && touched.feeStructure && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.feeStructure}
+                        </div>
+                      )}
                     </div>
                     <div className="mb-4">
-                      <Field name="facilities">
-                        {({ field }) => (
-                          <Input
-                            {...field}
-                            label="Facilities (comma separated)"
-                            placeholder="Enter facilities"
-                            isInvalid={touched.facilities && errors.facilities}
-                            errorMessage={touched.facilities && errors.facilities}
-                          />
-                        )}
-                      </Field>
+                      <Field
+                        as={Input}
+                        label="Facilities (comma separated)"
+                        name="facilities"
+                        placeholder="Enter facilities"
+                      />
+                      {errors.facilities && touched.facilities && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.facilities}
+                        </div>
+                      )}
                     </div>
                     <div className="mb-4">
-                      <Field name="resources">
-                        {({ field }) => (
-                          <Input
-                            {...field}
-                            label="Resources (comma separated)"
-                            placeholder="Enter resources"
-                            isInvalid={touched.resources && errors.resources}
-                            errorMessage={touched.resources && errors.resources}
-                          />
-                        )}
-                      </Field>
+                      <Field
+                        as={Input}
+                        label="Resources (comma separated)"
+                        name="resources"
+                        placeholder="Enter resources"
+                      />
+                      {errors.resources && touched.resources && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.resources}
+                        </div>
+                      )}
                     </div>
                   </ModalBody>
                   <ModalFooter>

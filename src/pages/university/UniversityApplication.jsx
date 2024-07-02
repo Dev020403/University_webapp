@@ -13,7 +13,7 @@ const Application = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingStatuses, setLoadingStatuses] = useState({});
-  const [sortBy, setSortBy] = useState(""); 
+  const [sortBy, setSortBy] = useState("");
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
 
@@ -35,6 +35,7 @@ const Application = () => {
         }
       );
       setApplications(response.data.applications);
+      console.log(response.data.applications)
       setTotalPages(response.data.totalPages);
       setCurrentPage(page);
     } catch (error) {
@@ -116,6 +117,7 @@ const Application = () => {
 
   const columns = [
     { key: "id", label: "Application ID" },
+    { key: "course", label: "Course" },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     { key: "contact", label: "Contact" },
@@ -126,6 +128,7 @@ const Application = () => {
 
   const rows = applications.map((application) => ({
     id: application._id,
+    course : application.course.name,
     name: application.student.profile.name,
     email: application.student.email,
     contact: application.student.profile.personalInfo.phone,

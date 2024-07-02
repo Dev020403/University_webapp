@@ -142,7 +142,7 @@ const UniversityCourses = () => {
     <UniversityLayout>
       <div className="container mx-auto px-4 py-8 relative bg-white border-1 shadow-">
         <div className="flex justify-end mb-4">
-          <Button color="primary" endContent={<FaPlus />} onPress={onOpen}>
+          <Button color="primary" variant="ghost" endContent={<FaPlus />} onPress={onOpen}>
             Create Course
           </Button>
         </div>
