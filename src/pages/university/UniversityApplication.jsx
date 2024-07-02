@@ -9,20 +9,26 @@ import { Spinner } from "@nextui-org/react";
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingStatuses, setLoadingStatuses] = useState({});
+  const [sortBy, setSortBy] = useState(""); 
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
 
   // Fetch applications data from the backend API
   const fetchApplications = async (page = 1) => {
     try {
-      setloading(true);
+      setLoading(true);
       const response = await axios.get(
-        `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238?page=${page}&limit=${rowsPerPage}`,
+        `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238`,
         {
+          params: {
+            page: page,
+            limit: rowsPerPage,
+            sortBy: sortBy,
+          },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -34,23 +40,21 @@ const Application = () => {
     } catch (error) {
       console.error("Error fetching applications:", error);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchApplications();
-  }, []); // Fetch applications on component mount
+  }, [sortBy]); // Refetch applications when sortBy changes
 
   const handleStatusChange = async (applicationId, newStatus) => {
     try {
-      // Set loading state to true for this application
       setLoadingStatuses((prevStatuses) => ({
         ...prevStatuses,
         [applicationId]: true,
       }));
 
-      // Optimistically update the status locally
       setApplications((prevApplications) =>
         prevApplications.map((application) =>
           application._id === applicationId
@@ -59,7 +63,6 @@ const Application = () => {
         )
       );
 
-      // Update status on the server
       const response = await axios.put(
         `http://localhost:3000/api/${applicationId}/status`,
         { status: newStatus },
@@ -74,7 +77,6 @@ const Application = () => {
         toast.success("Application status updated successfully");
       }
 
-      // Set loading state to false for this application
       setLoadingStatuses((prevStatuses) => ({
         ...prevStatuses,
         [applicationId]: false,
@@ -82,23 +84,12 @@ const Application = () => {
     } catch (error) {
       console.error("Error updating application status:", error);
 
-      // Set loading state to false for this application
       setLoadingStatuses((prevStatuses) => ({
         ...prevStatuses,
         [applicationId]: false,
       }));
     }
   };
-
-  const columns = [
-    { key: "id", label: "Application ID" },
-    { key: "name", label: "Name" },
-    { key: "email", label: "Email" },
-    { key: "contact", label: "Contact" },
-    { key: "status", label: "Status" },
-    { key: "jeePr", label: "JEE Percentile" },
-    { key: "boardPr", label: "Board Percentile" },
-  ];
 
   const getStatusSelect = (applicationId, currentStatus) => (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -123,6 +114,16 @@ const Application = () => {
     </div>
   );
 
+  const columns = [
+    { key: "id", label: "Application ID" },
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email" },
+    { key: "contact", label: "Contact" },
+    { key: "status", label: "Status" },
+    { key: "jeePr", label: "JEE Percentile" },
+    { key: "boardPr", label: "Board Percentile" },
+  ];
+
   const rows = applications.map((application) => ({
     id: application._id,
     name: application.student.profile.name,
@@ -138,8 +139,31 @@ const Application = () => {
     fetchApplications(newPage);
   };
 
+  // Handle sorting change
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+  };
+
   return (
     <UniversityLayout>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <label htmlFor="sortBy" className="mr-2">
+            Sort By:
+          </label>
+          <select
+            id="sortBy"
+            value={sortBy}
+            onChange={handleSortChange}
+            className="px-2 py-1 border border-gray-300 rounded-md"
+          >
+            <option value="">No Filter</option>
+            <option value="jeePr">JEE Percentile</option>
+            <option value="boardPr">Board Percentile</option>
+          </select>
+        </div>
+      </div>
+
       <TableGrid
         columns={columns}
         rows={rows}
