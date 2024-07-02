@@ -6,7 +6,7 @@ import { loginUser } from "../../redux/authSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import TextInputField from "../../components/auth/TextInputField"; // Adjust the import path as needed
+import TextInputField from "../../components/auth/TextInputField";
 
 const Login = () => {
   const dispatch = useDispatch();

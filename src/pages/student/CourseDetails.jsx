@@ -39,11 +39,15 @@ const CourseDetails = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      if (response.data.code === 400) {
+        toast.error("You have already applied for this course!");
+        return;
+      }
       toast.success("Application submitted successfully!");
       console.log("Application successful:", response.data);
     } catch (error) {
       console.error("Error applying for course:", error);
-      toast.error("Failed to submit application. Please try again.");
+      toast.error("Error applying for course", error);
     } finally {
       setLoading(false);
     }

@@ -4,14 +4,12 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import StudentLayout from "../layout/StudentLayout";
 import { FiMapPin, FiPhone, FiGlobe } from "react-icons/fi";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { Spinner } from "@nextui-org/react";
 
 const UniversityDetails = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
-  const studentId = useSelector((state) => state.auth.user._id);
 
   const [university, setUniversity] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
@@ -36,7 +34,7 @@ const UniversityDetails = () => {
   if (!university) {
     return (
       <div className="flex justify-center items-center h-screen">
-          <Spinner color="primary" />
+        <Spinner color="primary" />
       </div>
     );
   }
@@ -59,9 +57,7 @@ const UniversityDetails = () => {
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="p-4">
           {activeTab === "overview" && <Overview university={university} />}
-          {activeTab === "courses" && (
-            <Courses courses={university.courses} />
-          )}
+          {activeTab === "courses" && <Courses courses={university.courses} />}
           {activeTab === "contact" && (
             <Contact contact={university.contactDetails} />
           )}
@@ -107,9 +103,7 @@ const Courses = ({ courses }) => (
     {courses.length === 0 ? (
       <p>No courses available</p>
     ) : (
-      courses.map((course) => (
-        <Course key={course._id} course={course} />
-      ))
+      courses.map((course) => <Course key={course._id} course={course} />)
     )}
   </div>
 );
@@ -186,17 +180,6 @@ const PlacementStats = ({ stats }) => (
       <p>No data available</p>
     )}
   </section>
-);
-
-const Details = ({ label, items }) => (
-  <div className="mb-3">
-    <p className="text-sm text-gray-700 font-medium">{label}:</p>
-    <ul className="list-disc list-inside text-sm text-gray-600">
-      {items.map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
-    </ul>
-  </div>
 );
 
 const ContactItem = ({ icon, detail }) => (
