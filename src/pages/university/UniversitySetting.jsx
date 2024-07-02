@@ -1,13 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import Select from "react-select";
-import UniversityLayout from "../../layout/UniversityLayout"; 
+import UniversityLayout from "../../layout/UniversityLayout";
 import { ToastContainer, toast } from "react-toastify";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../components/auth/TextInputField";
-import ImageUploadField from "../../components/auth/ImageUploadField";
 import { updateUserProfile } from "../../redux/authSlice";
 
 const validationSchema = Yup.object().shape({
@@ -22,7 +20,17 @@ const validationSchema = Yup.object().shape({
     percentagePlaced: Yup.number(),
     avgSalary: Yup.number(),
     highestSalary: Yup.number(),
-    topRecruiters: Yup.array().of(Yup.string()),
+    topRecruiters: Yup.array()
+      .of(Yup.string())
+      .transform((value) => {
+        if (typeof value === "string") {
+          return value.split(",").map((recruiter) => recruiter.trim());
+        }
+        return value;
+      })
+      .test("is-array", "Top Recruiters must be an array", (value) =>
+        Array.isArray(value)
+      ),
   }),
   contactDetails: Yup.object().shape({
     address: Yup.string(),
@@ -48,7 +56,7 @@ const UniversitySettings = () => {
       percentagePlaced: university.placementStats.percentagePlaced || 0,
       avgSalary: university.placementStats.avgSalary || 0,
       highestSalary: university.placementStats.highestSalary || 0,
-      topRecruiters: university.placementStats.topRecruiters || [],
+      topRecruiters: university.placementStats.topRecruiters.join(", ") || "",
     },
     contactDetails: {
       address: university.contactDetails.address || "",
@@ -59,7 +67,12 @@ const UniversitySettings = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      console.log(values)
+      // Convert the topRecruiters string to an array
+      values.placementStats.topRecruiters = values.placementStats.topRecruiters
+        .split(",")
+        .map((recruiter) => recruiter.trim());
+
+      console.log(values);
       const response = await axios.put(
         `http://localhost:3000/api/update-university/${id}`,
         values
@@ -83,9 +96,9 @@ const UniversitySettings = () => {
   return (
     <UniversityLayout>
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="px-6 py-4">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            University Settings
+        <div className="px-8 py-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">
+            Update Details
           </h1>
 
           <Formik
@@ -96,110 +109,118 @@ const UniversitySettings = () => {
             {({ isSubmitting, setFieldValue }) => (
               <Form>
                 {/* Basic Information Section */}
-                <div className="mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                     Basic Information
                   </h2>
-                  <TextInputField
-                    label="Name"
-                    name="name"
-                    type="text"
-                    placeholder="Enter university name"
-                  />
-                  <TextInputField
-                    label="About"
-                    name="about"
-                    type="text"
-                    placeholder="Enter about the university"
-                  />
-                  <TextInputField
-                    label="History"
-                    name="history"
-                    type="text"
-                    placeholder="Enter university history"
-                  />
-                  <TextInputField
-                    label="Mission"
-                    name="mission"
-                    type="text"
-                    placeholder="Enter university mission"
-                  />
-                  <TextInputField
-                    label="Core Values"
-                    name="values"
-                    type="text"
-                    placeholder="Enter core values"
-                  />
-                  <ImageUploadField
-                    label="Logo"
-                    name="logo"
-                    placeholder="Upload university logo"
-                  />
-                  <ImageUploadField
-                    label="Cover Photo"
-                    name="coverPhoto"
-                    placeholder="Upload cover photo"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <TextInputField
+                      label="Name"
+                      name="name"
+                      type="text"
+                      placeholder="Enter university name"
+                    />
+                    <TextInputField
+                      label="About"
+                      name="about"
+                      type="text"
+                      placeholder="Enter about the university"
+                    />
+                    <TextInputField
+                      label="History"
+                      name="history"
+                      type="text"
+                      placeholder="Enter university history"
+                    />
+                    <TextInputField
+                      label="Mission"
+                      name="mission"
+                      type="text"
+                      placeholder="Enter university mission"
+                    />
+                    <TextInputField
+                      label="Core Values"
+                      name="values"
+                      type="text"
+                      placeholder="Enter core values"
+                    />
+                    <TextInputField
+                      label="Logo"
+                      name="logo"
+                      type="text"
+                      placeholder="Upload university logo"
+                    />
+                    <TextInputField
+                      label="Cover Photo"
+                      name="coverPhoto"
+                      type="text"
+                      placeholder="Upload cover photo"
+                    />
+                  </div>
                 </div>
 
                 {/* Placement Statistics Section */}
                 <div className="mb-8">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                     Placement Statistics
                   </h2>
-                  <TextInputField
-                    label="Percentage Placed"
-                    name="placementStats.percentagePlaced"
-                    type="number"
-                    placeholder="Enter percentage placed"
-                  />
-                  <TextInputField
-                    label="Average Salary"
-                    name="placementStats.avgSalary"
-                    type="number"
-                    placeholder="Enter average salary"
-                  />
-                  <TextInputField
-                    label="Highest Salary"
-                    name="placementStats.highestSalary"
-                    type="number"
-                    placeholder="Enter highest salary"
-                  />
-                  <TextInputField
-                    label="Top Recruiters"
-                    name="placementStats.topRecruiters"
-                    type="text"
-                    placeholder="Enter top recruiters"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <TextInputField
+                      label="Percentage Placed"
+                      name="placementStats.percentagePlaced"
+                      type="number"
+                      placeholder="Enter percentage placed"
+                    />
+                    <TextInputField
+                      label="Average Salary"
+                      name="placementStats.avgSalary"
+                      type="number"
+                      placeholder="Enter average salary"
+                    />
+                    <TextInputField
+                      label="Highest Salary"
+                      name="placementStats.highestSalary"
+                      type="number"
+                      placeholder="Enter highest salary"
+                    />
+                    <TextInputField
+                      label="Top Recruiters"
+                      name="placementStats.topRecruiters"
+                      type="text"
+                      placeholder="Enter top recruiters, separated by commas"
+                    />
+                  </div>
                 </div>
 
                 {/* Contact Details Section */}
                 <div className="mb-8">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                     Contact Details
                   </h2>
-                  <TextInputField
-                    label="Address"
-                    name="contactDetails.address"
-                    type="text"
-                    placeholder="Enter contact address"
-                  />
-                  <TextInputField
-                    label="Phone"
-                    name="contactDetails.phone"
-                    type="text"
-                    placeholder="Enter contact phone number"
-                  />
-                  <TextInputField
-                    label="Website"
-                    name="contactDetails.website"
-                    type="text"
-                    placeholder="Enter website URL"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <TextInputField
+                      label="Address"
+                      name="contactDetails.address"
+                      type="text"
+                      placeholder="Enter contact address"
+                    />
+                    <TextInputField
+                      label="Phone"
+                      name="contactDetails.phone"
+                      type="text"
+                      placeholder="Enter contact phone number"
+                    />
+                    <TextInputField
+                      label="Website"
+                      name="contactDetails.website"
+                      type="text"
+                      placeholder="Enter website URL"
+                    />
+                  </div>
                 </div>
 
                 {/* Submit Button */}
-                <div>
+                <div className="flex justify-end">
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -213,7 +234,7 @@ const UniversitySettings = () => {
           </Formik>
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+      <ToastContainer position="top-right" autoClose={2000} />
     </UniversityLayout>
   );
 };
