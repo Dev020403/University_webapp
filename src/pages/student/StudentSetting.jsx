@@ -5,7 +5,7 @@ import Select from "react-select";
 import StudentLayout from "../../layout/StudentLayout";
 import { updateUserProfile } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
-import { Formik, Form } from "formik";
+import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../components/auth/TextInputField";
 import DateInputField from "../../components/auth/DateInputField";
@@ -18,6 +18,39 @@ const validationSchema = Yup.object().shape({
   jeePr: Yup.number().required("JEE Percentile is required"),
   boardPr: Yup.number().required("Board Percentile is required"),
 });
+
+const preferenceOptions = [
+  {
+    value: "Computer Science Engineering",
+    label: "Computer Science Engineering",
+  },
+  { value: "Information Technology", label: "Information Technology" },
+  { value: "Civil Engineering", label: "Civil Engineering" },
+  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  { value: "Electrical Engineering", label: "Electrical Engineering" },
+];
+
+const PreferencesSelect = () => {
+  const { values, setFieldValue } = useFormikContext();
+
+  return (
+    <Select
+      options={preferenceOptions}
+      isMulti
+      value={preferenceOptions.filter((option) =>
+        values.preferences.includes(option.value)
+      )}
+      onChange={(selectedOptions) => {
+        const selectedPreferences = selectedOptions
+          ? selectedOptions.map((option) => option.value)
+          : [];
+        setFieldValue("preferences", selectedPreferences);
+      }}
+      className="basic-multi-select"
+      classNamePrefix="select"
+    />
+  );
+};
 
 const StudentSetting = () => {
   const user = useSelector((state) => state.auth.user);
@@ -37,10 +70,24 @@ const StudentSetting = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    const payload = {
+      name: values.name,
+      personalInfo: {
+        dob: values.dob,
+        address: values.address,
+        phone: values.phone,
+      },
+      academicBackground: {
+        jeePr: values.jeePr,
+        boardPr: values.boardPr,
+      },
+      preferences: values.preferences,
+    };
+
     try {
       const response = await axios.put(
         `http://localhost:3000/api/update-student/${userId}`,
-        values
+        payload
       );
       if (response.data) {
         console.log("API Response:", response.data);
@@ -49,10 +96,7 @@ const StudentSetting = () => {
       }
     } catch (err) {
       console.error("Update failed:", err);
-      toast.error(
-        "Update failed. Please try again.",
-        err.response.data.message
-      );
+      toast.error("Update failed. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -71,7 +115,7 @@ const StudentSetting = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting, setFieldValue }) => (
+            {({ isSubmitting }) => (
               <Form>
                 {/* Personal Information Section */}
                 <div className="mb-4">
@@ -106,39 +150,7 @@ const StudentSetting = () => {
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">
                     Preferences
                   </h2>
-                  <Select
-                    options={[
-                      {
-                        value: "Computer Sciece Engineering",
-                        label: "Computer Sciece Engineering",
-                      },
-                      {
-                        value: "Information Technology",
-                        label: "Information Technology",
-                      },
-                      {
-                        value: "Civil Engineering",
-                        label: "Civil Engineering",
-                      },
-                      {
-                        value: "Mechanical Engineering",
-                        label: "Mechanical Engineering",
-                      },
-                      {
-                        value: "Electrical Engineering",
-                        label: "Electrical Engineering",
-                      },
-                    ]}
-                    isMulti
-                    onChange={(selectedOptions) => {
-                      const selectedPreferences = selectedOptions
-                        ? selectedOptions.map((option) => option.value)
-                        : [];
-                      setFieldValue("preferences", selectedPreferences);
-                    }}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                  />
+                  <PreferencesSelect />
                 </div>
 
                 {/* Academic Background Section */}
@@ -177,7 +189,7 @@ const StudentSetting = () => {
           </Formik>
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+      <ToastContainer position="top-right" autoClose={2000} />
     </StudentLayout>
   );
 };
