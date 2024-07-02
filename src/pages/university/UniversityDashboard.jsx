@@ -31,7 +31,7 @@ const Dashboard = () => {
     setTotalCourses(res.data.totalCourses);
     setAcceptedCount(res.data.acceptedCount);
     setRejectedCount(res.data.rejectedCount);
-    setSubmittedCount(res.data.rejectedCount);
+    setSubmittedCount(res.data.submittedCount);
     setUnderReviewCount(res.data.underReviewCount);
     setTotalApplications(res.data.totalApplications);
   };

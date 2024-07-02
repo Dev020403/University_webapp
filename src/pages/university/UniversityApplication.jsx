@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Spinner } from "@nextui-org/react";
+import { useDebounce } from "use-debounce";
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
@@ -14,6 +15,8 @@ const Application = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loadingStatuses, setLoadingStatuses] = useState({});
   const [sortBy, setSortBy] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Debounced search query
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
 
@@ -25,6 +28,7 @@ const Application = () => {
         `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238`,
         {
           params: {
+            search: debouncedSearchQuery, // Use debounced search query
             page: page,
             limit: rowsPerPage,
             sortBy: sortBy,
@@ -35,7 +39,6 @@ const Application = () => {
         }
       );
       setApplications(response.data.applications);
-      console.log(response.data.applications)
       setTotalPages(response.data.totalPages);
       setCurrentPage(page);
     } catch (error) {
@@ -47,7 +50,7 @@ const Application = () => {
 
   useEffect(() => {
     fetchApplications();
-  }, [sortBy]); // Refetch applications when sortBy changes
+  }, [sortBy, debouncedSearchQuery]); // Refetch applications when sortBy or debouncedSearchQuery changes
 
   const handleStatusChange = async (applicationId, newStatus) => {
     try {
@@ -128,7 +131,7 @@ const Application = () => {
 
   const rows = applications.map((application) => ({
     id: application._id,
-    course : application.course.name,
+    course: application.course.name,
     name: application.student.profile.name,
     email: application.student.email,
     contact: application.student.profile.personalInfo.phone,
@@ -145,6 +148,11 @@ const Application = () => {
   // Handle sorting change
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -164,6 +172,15 @@ const Application = () => {
             <option value="jeePr">JEE Percentile</option>
             <option value="boardPr">Board Percentile</option>
           </select>
+        </div>
+        <div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search by name ,email or id"
+            className="w-72 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 flex-1"
+          />
         </div>
       </div>
 
