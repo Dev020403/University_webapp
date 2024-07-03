@@ -54,19 +54,19 @@ const PreferencesSelect = () => {
 
 const StudentSetting = () => {
   const user = useSelector((state) => state.auth.user);
-  const userId = user._id;
+  const userId = user?._id;
   const dispatch = useDispatch();
 
   const initialValues = {
-    name: user.profile.name || "",
-    dob: user.profile.personalInfo.dob
+    name: user?.profile?.name ?? "",
+    dob: user?.profile?.personalInfo?.dob
       ? new Date(user.profile.personalInfo.dob).toISOString().substr(0, 10)
       : "",
-    address: user.profile.personalInfo.address || "",
-    phone: user.profile.personalInfo.phone || "",
-    jeePr: user.profile.academicBackground.jeePr || "",
-    boardPr: user.profile.academicBackground.boardPr || "",
-    preferences: user.profile.preferences || [],
+    address: user?.profile?.personalInfo?.address ?? "",
+    phone: user?.profile?.personalInfo?.phone ?? "",
+    jeePr: user?.profile?.academicBackground?.jeePr ?? "",
+    boardPr: user?.profile?.academicBackground?.boardPr ?? "",
+    preferences: user?.profile?.preferences ?? [],
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -107,7 +107,7 @@ const StudentSetting = () => {
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="px-6 py-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Student Settings
+            Update Details
           </h1>
 
           <Formik

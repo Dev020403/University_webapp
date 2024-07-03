@@ -36,6 +36,10 @@ const TableGrid = ({
         <div className="flex items-center justify-center h-64">
           <Spinner color="primary" />
         </div>
+      ) : rows.length === 0 ? (
+        <div className="flex items-center justify-center h-96 bg-white">
+          <p className="text-gray-500">No data available</p>
+        </div>
       ) : (
         <Table
           aria-label="Example table with dynamic content"

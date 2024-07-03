@@ -24,28 +24,37 @@ const Dashboard = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   const fetchData = async () => {
-    const res = await axios.get(
-      `http://localhost:3000/api/${universityId}/totalData`
-    );
-    console.log(res.data);
-    setTotalCourses(res.data.totalCourses);
-    setAcceptedCount(res.data.acceptedCount);
-    setRejectedCount(res.data.rejectedCount);
-    setSubmittedCount(res.data.submittedCount);
-    setUnderReviewCount(res.data.underReviewCount);
-    setTotalApplications(res.data.totalApplications);
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/${universityId}/totalData`
+      );
+      console.log(res.data);
+      setTotalCourses(res.data.totalCourses);
+      setAcceptedCount(res.data.acceptedCount);
+      setRejectedCount(res.data.rejectedCount);
+      setSubmittedCount(res.data.submittedCount);
+      setUnderReviewCount(res.data.underReviewCount);
+      setTotalApplications(res.data.totalApplications);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Optionally handle errors or display a message
+    }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Conditional rendering if all counts are zero
+  const noData = data.every((item) => item.value === 0);
 
   return (
     <UniversityLayout>
       <WelcomeCard name={userName}></WelcomeCard>
 
-      <div className="w-[100%] flex">
+      <div className="w-full flex">
         <div className="flex flex-col gap-4 w-1/2">
-          <div className="bg-white p-4  rounded-md shadow-md w-full mr-4">
+          <div className="bg-white p-4 rounded-md shadow-md w-full mr-4">
             <h2 className="text-lg font-semibold mb-2">
               Total Student Applications
             </h2>
@@ -58,27 +67,33 @@ const Dashboard = () => {
         </div>
 
         <div className="w-1/2 bg-white rounded-md border-1 shadow-md ml-5 flex justify-center">
-          <PieChart className="" width={400} height={400}>
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              label
-            >
-              {data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
+          {noData ? (
+            <p className="text-gray-500 text-center m-auto">
+              No data available for pie chart
+            </p>
+          ) : (
+            <PieChart width={400} height={400}>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          )}
         </div>
       </div>
     </UniversityLayout>

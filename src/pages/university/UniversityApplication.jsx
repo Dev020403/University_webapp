@@ -19,13 +19,14 @@ const Application = () => {
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Debounced search query
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
+  const universityId = useSelector((state) => state.auth.user._id);
 
   // Fetch applications data from the backend API
   const fetchApplications = async (page = 1) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3000/api/university-applications/6671518cd0af51e7954e3238`,
+        `http://localhost:3000/api/university-applications/${universityId}`,
         {
           params: {
             search: debouncedSearchQuery, // Use debounced search query

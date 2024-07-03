@@ -5,10 +5,12 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextInputField from "../../components/auth/TextInputField"; // Adjust the path as needed
+import { useNavigate } from "react-router-dom";
 
 const UniversitySignup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     username: Yup.string().required("Username is required"),
@@ -38,6 +40,7 @@ const UniversitySignup = () => {
       );
       console.log("Registration successful:", response.data);
       toast.success("University registration successful!");
+      navigate("/login");
     } catch (error) {
       console.error(
         "University registration failed:",
@@ -89,7 +92,9 @@ const UniversitySignup = () => {
                 placeholder="********"
                 isPassword={true}
                 showPassword={showConfirmPassword}
-                toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
+                toggleShowPassword={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
               />
               <TextInputField
                 label="University Name"

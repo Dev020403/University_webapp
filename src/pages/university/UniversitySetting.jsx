@@ -45,23 +45,23 @@ const UniversitySettings = () => {
   const dispatch = useDispatch();
 
   const initialValues = {
-    name: university.name || "",
-    about: university.about || "",
-    history: university.history || "",
-    mission: university.mission || "",
-    values: university.values || "",
-    logo: university.logo || "",
-    coverPhoto: university.coverPhoto || "",
+    name: university?.name || "",
+    about: university?.about || "",
+    history: university?.history || "",
+    mission: university?.mission || "",
+    values: university?.values || "",
+    logo: university?.logo || "",
+    coverPhoto: university?.coverPhoto || "",
     placementStats: {
-      percentagePlaced: university.placementStats.percentagePlaced || 0,
-      avgSalary: university.placementStats.avgSalary || 0,
-      highestSalary: university.placementStats.highestSalary || 0,
-      topRecruiters: university.placementStats.topRecruiters.join(", ") || "",
+      percentagePlaced: university?.placementStats?.percentagePlaced || 0,
+      avgSalary: university?.placementStats?.avgSalary || 0,
+      highestSalary: university?.placementStats?.highestSalary || 0,
+      topRecruiters: university?.placementStats?.topRecruiters?.join(", ") || "",
     },
     contactDetails: {
-      address: university.contactDetails.address || "",
-      phone: university.contactDetails.phone || "",
-      website: university.contactDetails.website || "",
+      address: university?.contactDetails?.address || "",
+      phone: university?.contactDetails?.phone || "",
+      website: university?.contactDetails?.website || "",
     },
   };
 

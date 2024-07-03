@@ -21,6 +21,7 @@ import UniversityProfile from './pages/university/UniversityProfile';
 import CourseDetails from './pages/student/CourseDetails';
 import UniversityCourses from './pages/university/UniversityCourses';
 import NotFound from './NotFound';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
@@ -28,22 +29,24 @@ function App() {
       <NextUIProvider>
         <BrowserRouter>
           <Routes>
-            <Route path='/' Component={RoleSelection} />
-            <Route path='*' Component={NotFound}></Route>
+            {/* Public Routes */}
+            <Route path='/' Component={LandingPage} />
             <Route path='/student-signup' Component={StudentSignup} />
             <Route path='/university-signup' Component={UniversitySignup} />
+            <Route path='/signup' Component={RoleSelection} />
             <Route path='/login' Component={Login} />
+            <Route path='*' Component={NotFound}></Route>
 
             {/* Student Routes */}
             <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-              <Route path='/student-onboard' Component={StudentOnboardForm} />
-              <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/student-dashboard/Dashboard' Component={StudentDashboard} />
               <Route path='/student-dashboard/Universities' Component={UniversityList} />
+              <Route path="/university/:id" Component={UniversityDetails} />
+              <Route path='/student-onboard' Component={StudentOnboardForm} />
+              <Route path='/university/course-details/:id' Component={CourseDetails} />
               <Route path='/student-dashboard/Applications' Component={YourApplications} />
               <Route path='/student-dashboard/Setting' Component={StudentSetting} />
               <Route path='/student-dashboard/profile' Component={StudentProfile} />
-              <Route path='/university/course-details/:id' Component={CourseDetails} />
             </Route>
 
             {/* University Routes */}

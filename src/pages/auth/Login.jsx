@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/authSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import TextInputField from "../../components/auth/TextInputField";
 
 const Login = () => {
@@ -83,6 +83,14 @@ const Login = () => {
             </Form>
           )}
         </Formik>
+        
+        {/* New Back to Home button */}
+        <Link 
+          to="/" 
+          className="block mt-6 text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+        >
+          Back to Home
+        </Link>
       </div>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>

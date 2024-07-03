@@ -6,10 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextInputField from "../../components/auth/TextInputField";
 import DateInputField from "../../components/auth/DateInputField";
+import { useNavigate } from "react-router-dom";
 
 const StudentSignup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     username: Yup.string().required("Username is required"),
@@ -50,7 +52,8 @@ const StudentSignup = () => {
         values
       );
       console.log("Registration successful:", response.data);
-      toast.success("Registration successful!"); // Show success toast
+      toast.success("Registration successful!");
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error.response.data.message);
       toast.error(
@@ -105,7 +108,9 @@ const StudentSignup = () => {
                 placeholder="********"
                 isPassword={true}
                 showPassword={showConfirmPassword}
-                toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
+                toggleShowPassword={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
               />
               <DateInputField
                 label="Date of Birth"
@@ -128,11 +133,7 @@ const StudentSignup = () => {
           )}
         </Formik>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-      />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
 };

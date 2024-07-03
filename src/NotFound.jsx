@@ -9,7 +9,7 @@ const NotFound = () => (
       <p className="text-gray-500 mt-4">
         The page you are looking for does not exist.
       </p>
-      <Link to="/login" className="text-blue-500 mt-4 inline-block">
+      <Link to="/" className="text-blue-500 mt-4 inline-block">
         Go back to Home
       </Link>
     </div>

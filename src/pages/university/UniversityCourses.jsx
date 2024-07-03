@@ -142,20 +142,33 @@ const UniversityCourses = () => {
     <UniversityLayout>
       <div className="container mx-auto px-4 py-8 relative bg-white border-1 shadow-">
         <div className="flex justify-end mb-4">
-          <Button color="primary" variant="ghost" endContent={<FaPlus />} onPress={onOpen}>
+          <Button
+            color="primary"
+            variant="ghost"
+            endContent={<FaPlus />}
+            onPress={onOpen}
+          >
             Create Course
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <CourseCard
-              key={course._id}
-              course={course}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
+        {courses.length === 0 ? (
+          <div className="flex justify-center items-center text-center text-gray-500 h-96">
+            <p>
+              No courses available. Click "Create Course" to add a new course.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <CourseCard
+                key={course._id}
+                course={course}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
 
         <Modal
           isOpen={isOpen}
