@@ -132,13 +132,13 @@ const Application = () => {
 
   const rows = applications.map((application) => ({
     id: application._id,
-    course: application.course.name,
-    name: application.student.profile.name,
-    email: application.student.email,
-    contact: application.student.profile.personalInfo.phone,
+    course: application?.course?.name,
+    name: application?.student?.profile?.name,
+    email: application?.student?.email,
+    contact: application?.student?.profile?.personalInfo?.phone,
     status: getStatusSelect(application._id, application.applicationStatus),
-    jeePr: application.student.profile.academicBackground.jeePr,
-    boardPr: application.student.profile.academicBackground.boardPr,
+    jeePr: application?.student?.profile?.academicBackground?.jeePr,
+    boardPr: application?.student?.profile?.academicBackground?.boardPr,
   }));
 
   // Handle page change
