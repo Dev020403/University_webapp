@@ -20,13 +20,17 @@ const Dashboard = () => {
     { name: "Rejected", value: rejectedCount },
     { name: "Accepted", value: acceptedCount },
   ];
-
+  const token = useSelector((state) => state.auth.token);
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/${universityId}/totalData`
+        `http://localhost:3000/api/${universityId}/totalData`,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(res.data);
       setTotalCourses(res.data.totalCourses);

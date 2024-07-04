@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import Select from "react-select";
 import StudentLayout from "../../layout/StudentLayout";
 import { updateUserProfile } from "../../redux/authSlice";
@@ -55,6 +55,7 @@ const PreferencesSelect = () => {
 const StudentSetting = () => {
   const user = useSelector((state) => state.auth.user);
   const userId = user?._id;
+  const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -87,7 +88,12 @@ const StudentSetting = () => {
     try {
       const response = await axios.put(
         `http://localhost:3000/api/update-student/${userId}`,
-        payload
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data) {
         console.log("API Response:", response.data);

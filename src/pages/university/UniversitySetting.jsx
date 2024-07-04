@@ -43,6 +43,7 @@ const UniversitySettings = () => {
   const university = useSelector((state) => state.auth.user);
   const id = university._id;
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
 
   const initialValues = {
     name: university?.name || "",
@@ -56,7 +57,8 @@ const UniversitySettings = () => {
       percentagePlaced: university?.placementStats?.percentagePlaced || 0,
       avgSalary: university?.placementStats?.avgSalary || 0,
       highestSalary: university?.placementStats?.highestSalary || 0,
-      topRecruiters: university?.placementStats?.topRecruiters?.join(", ") || "",
+      topRecruiters:
+        university?.placementStats?.topRecruiters?.join(", ") || "",
     },
     contactDetails: {
       address: university?.contactDetails?.address || "",
@@ -75,7 +77,12 @@ const UniversitySettings = () => {
       console.log(values);
       const response = await axios.put(
         `http://localhost:3000/api/update-university/${id}`,
-        values
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data) {
         console.log("API Response:", response.data);

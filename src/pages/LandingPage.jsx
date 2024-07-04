@@ -6,6 +6,7 @@ import { useDebounce } from "use-debounce";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Spinner } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -24,19 +25,28 @@ const LandingPage = () => {
   );
 };
 
-const HeroSection = () => (
-  <section className="text-center  mb-24 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20 rounded-lg shadow-xl">
-    <h2 className="text-6xl font-extrabold mb-6 leading-tight">
-      Find Your Perfect University
-    </h2>
-    <p className="text-2xl mb-10 max-w-2xl mx-auto opacity-90">
-      Explore universities, view courses, and apply directly through our portal.
-    </p>
-    <button className="bg-white text-blue-600 py-4 px-10 rounded-full text-xl font-bold hover:bg-blue-100 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
-      Get Started
-    </button>
-  </section>
-);
+const HeroSection = () => {
+  const navigate = useNavigate();
+  return (
+    <section className="text-center  mb-24 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20 rounded-lg shadow-xl">
+      <h2 className="text-6xl font-extrabold mb-6 leading-tight">
+        Find Your Perfect University
+      </h2>
+      <p className="text-2xl mb-10 max-w-2xl mx-auto opacity-90">
+        Explore universities, view courses, and apply directly through our
+        portal.
+      </p>
+      <button
+        className="bg-white text-blue-600 py-4 px-10 rounded-full text-xl font-bold hover:bg-blue-100 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
+        onClick={() => {
+          navigate("/login");
+        }}
+      >
+        Get Started
+      </button>
+    </section>
+  );
+};
 
 const FeaturesSection = () => (
   <section className="mb-24">
@@ -85,7 +95,7 @@ const UniversitiesShowcase = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/universities?page=${page}&limit=2&search=${search}`,
+        `http://localhost:3000/api/universities?page=${page}&limit=4&search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,9 +115,22 @@ const UniversitiesShowcase = () => {
     fetchUniversities(page, debouncedSearchQuery);
   }, [page, debouncedSearchQuery]);
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <section className="mb-24">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="px-7 pt-5">
+          <input
+            type="text"
+            placeholder="Search universities"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
         {loading ? (
           <div className="flex justify-center items-center h-96">
             <Spinner />
@@ -156,16 +179,24 @@ const UniversitiesShowcase = () => {
   );
 };
 
-const CallToActionSection = () => (
-  <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-16 rounded-lg shadow-2xl">
-    <h3 className="text-4xl font-bold mb-6">Join Us Today</h3>
-    <p className="text-xl mb-10 max-w-2xl mx-auto">
-      Create your account and start exploring the best universities.
-    </p>
-    <button className="bg-white text-blue-600 py-3 px-8 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
-      Sign Up
-    </button>
-  </section>
-);
+const CallToActionSection = () => {
+  const navigate = useNavigate();
+  return (
+    <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-16 rounded-lg shadow-2xl">
+      <h3 className="text-4xl font-bold mb-6">Join Us Today</h3>
+      <p className="text-xl mb-10 max-w-2xl mx-auto">
+        Create your account and start exploring the best universities.
+      </p>
+      <button
+        className="bg-white text-blue-600 py-3 px-8 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+        onClick={() => {
+          navigate("/signup");
+        }}
+      >
+        Sign Up
+      </button>
+    </section>
+  );
+};
 
 export default LandingPage;
