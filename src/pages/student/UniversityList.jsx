@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import StudentLayout from "../../layout/StudentLayout";
 import UniversityCard from "../../components/student/UniversityCard";
 import { useDebounce } from "use-debounce"; // Import useDebounce hook
 import { Spinner } from "@nextui-org/react";
+import axiosInstance from "../../config/axiosConfig";
 
 const UniversityList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,8 +19,8 @@ const UniversityList = () => {
   const fetchUniversities = async (page = 1, search = "") => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/universities?page=${page}&limit=10&search=${search}`,
+      const response = await axiosInstance.get(
+        `/api/universities?page=${page}&limit=10&search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

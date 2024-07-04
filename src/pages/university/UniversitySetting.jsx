@@ -1,12 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import UniversityLayout from "../../layout/UniversityLayout";
 import { ToastContainer, toast } from "react-toastify";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../components/auth/TextInputField";
 import { updateUserProfile } from "../../redux/authSlice";
+import axiosInstance from "../../config/axiosConfig";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -75,8 +75,8 @@ const UniversitySettings = () => {
         .map((recruiter) => recruiter.trim());
 
       console.log(values);
-      const response = await axios.put(
-        `http://localhost:3000/api/update-university/${id}`,
+      const response = await axiosInstance.put(
+        `/api/update-university/${id}`,
         values,
         {
           headers: {

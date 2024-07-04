@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import StudentLayout from "../../layout/StudentLayout";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Spinner } from "@nextui-org/react";
+import axiosInstance from "../../config/axiosConfig";
 
 const CourseDetails = () => {
   const [course, setCourse] = useState(null);
@@ -16,7 +16,7 @@ const CourseDetails = () => {
 
   const fetchCourseData = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/course/${id}`, {
+      const res = await axiosInstance.get(`/api/course/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCourse(res.data);
@@ -28,8 +28,8 @@ const CourseDetails = () => {
   const handleApply = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://localhost:3000/api/create-application`,
+      const response = await axiosInstance.post(
+        `/api/create-application`,
         {
           studentId,
           universityId,

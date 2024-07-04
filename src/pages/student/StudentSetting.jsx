@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios, { AxiosHeaders } from "axios";
 import Select from "react-select";
 import StudentLayout from "../../layout/StudentLayout";
 import { updateUserProfile } from "../../redux/authSlice";
@@ -9,6 +8,7 @@ import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../components/auth/TextInputField";
 import DateInputField from "../../components/auth/DateInputField";
+import axiosInstance from "../../config/axiosConfig";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -86,8 +86,8 @@ const StudentSetting = () => {
     };
 
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/update-student/${userId}`,
+      const response = await axiosInstance.put(
+        `/api/update-student/${userId}`,
         payload,
         {
           headers: {

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import TextInputField from "../../components/auth/TextInputField"; // Adjust the path as needed
+import TextInputField from "../../components/auth/TextInputField";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../config/axiosConfig";
 
 const UniversitySignup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,8 +34,8 @@ const UniversitySignup = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/register/university",
+      const response = await axiosInstance.post(
+        "/api/register/university",
         values
       );
       console.log("Registration successful:", response.data);

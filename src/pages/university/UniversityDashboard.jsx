@@ -3,7 +3,7 @@ import UniversityLayout from "../../layout/UniversityLayout";
 import WelcomeCard from "../../components/WelcomeCard";
 import { useSelector } from "react-redux";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
-import axios from "axios";
+import axiosInstance from "../../config/axiosConfig";
 
 const Dashboard = () => {
   const userName = useSelector((state) => state.auth.user?.name || "Guest");
@@ -25,8 +25,8 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/${universityId}/totalData`,{
+      const res = await axiosInstance.get(
+        `/api/${universityId}/totalData`,{
           headers: {
             Authorization: `Bearer ${token}`,
           },

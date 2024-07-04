@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
@@ -18,6 +17,7 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
+import axiosInstance from "../../config/axiosConfig";
 
 const UniversityCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -49,14 +49,11 @@ const UniversityCourses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/${universityId}/courses`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get(`/api/${universityId}/courses`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCourses(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -69,8 +66,8 @@ const UniversityCourses = () => {
 
   const handleEdit = async (courseId, updatedCourse) => {
     try {
-      await axios.put(
-        `http://localhost:3000/api/update-courses/${courseId}`,
+      await axiosInstance.put(
+        `/api/update-courses/${courseId}`,
         {
           ...updatedCourse,
           facilities: updatedCourse.facilities
@@ -96,14 +93,11 @@ const UniversityCourses = () => {
 
   const handleDelete = async (courseId) => {
     try {
-      await axios.delete(
-        `http://localhost:3000/api/delete-courses/${courseId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axiosInstance.delete(`/api/delete-courses/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchCourses();
       toast.success("Course deleted successfully");
     } catch (error) {
@@ -114,8 +108,8 @@ const UniversityCourses = () => {
 
   const handleCreateCourse = async (values, { resetForm }) => {
     try {
-      await axios.post(
-        `http://localhost:3000/api/create-course`,
+      await axiosInstance.post(
+        `/api/create-course`,
         {
           ...values,
           universityId: universityId,

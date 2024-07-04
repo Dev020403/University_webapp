@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import UniversityLayout from "../../layout/UniversityLayout";
 import TableGrid from "../../components/TableGrid";
 import { useSelector } from "react-redux";
@@ -7,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Spinner } from "@nextui-org/react";
 import { useDebounce } from "use-debounce";
+import axiosInstance from "../../config/axiosConfig";
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
@@ -25,8 +25,8 @@ const Application = () => {
   const fetchApplications = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://localhost:3000/api/university-applications/${universityId}`,
+      const response = await axiosInstance.get(
+        `/api/university-applications/${universityId}`,
         {
           params: {
             search: debouncedSearchQuery, // Use debounced search query
@@ -68,8 +68,8 @@ const Application = () => {
         )
       );
 
-      const response = await axios.put(
-        `http://localhost:3000/api/${applicationId}/status`,
+      const response = await axiosInstance.put(
+        `/api/${applicationId}/status`,
         { status: newStatus },
         {
           headers: {

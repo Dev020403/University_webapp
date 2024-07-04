@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import axiosInstance from '../../config/axiosConfig';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextInputField from "../../components/auth/TextInputField";
@@ -47,8 +47,8 @@ const StudentSignup = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/register/student",
+      const response = await axiosInstance.post(
+        "/api/register/student",
         values
       );
       console.log("Registration successful:", response.data);

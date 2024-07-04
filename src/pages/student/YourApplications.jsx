@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import StudentLayout from "../../layout/StudentLayout";
 import TableGrid from "../../components/TableGrid";
 import { Chip } from "@nextui-org/react";
+import axiosInstance from "../../config/axiosConfig";
 
 const StudentApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -17,8 +17,8 @@ const StudentApplications = () => {
   const fetchApplications = async (page = 1) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/student-applications/${studentId}?page=${page}&limit=${rowsPerPage}`,
+      const response = await axiosInstance.get(
+        `/api/student-applications/${studentId}?page=${page}&limit=${rowsPerPage}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

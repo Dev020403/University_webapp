@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../config/axiosConfig";
 import { useSelector } from "react-redux";
 import StudentLayout from "../layout/StudentLayout";
 import { FiMapPin, FiPhone, FiGlobe } from "react-icons/fi";
@@ -17,12 +17,9 @@ const UniversityDetails = () => {
   useEffect(() => {
     const fetchUniversityDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/universities/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axiosInstance.get(`/api/universities/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUniversity(response.data);
       } catch (error) {
         console.error("Error fetching university details:", error);

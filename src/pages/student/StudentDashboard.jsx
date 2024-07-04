@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import StudentLayout from "../../layout/StudentLayout";
 import WelcomeCard from "../../components/WelcomeCard";
 import UniversityCard from "../../components/student/UniversityCard";
 import { useSelector } from "react-redux";
 import { Spinner } from "@nextui-org/react";
+import axiosInstance from "../../config/axiosConfig";
 
 const StudentDashboard = () => {
   const userName = useSelector(
@@ -19,8 +19,8 @@ const StudentDashboard = () => {
   const fetchUniversities = async (page = 1, limit = 2) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/universities?page=${page}&limit=${limit}`,
+      const response = await axiosInstance.get(
+        `/api/universities?page=${page}&limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

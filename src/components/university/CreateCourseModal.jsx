@@ -1,11 +1,11 @@
 import React from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../auth/TextInputField";
 import { Button } from "@nextui-org/react";
+import axiosInstance from "../../config/axiosConfig";
 
 const CreateCourseModal = ({ showModal, setShowModal, fetchCourses }) => {
   const universityId = useSelector((state) => state.auth.user._id);
@@ -35,8 +35,8 @@ const CreateCourseModal = ({ showModal, setShowModal, fetchCourses }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      await axios.post(
-        `http://localhost:3000/api/create-course`,
+      await axiosInstance.post(
+        `/api/create-course`,
         {
           ...values,
           universityId: universityId,

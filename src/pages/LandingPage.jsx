@@ -4,9 +4,9 @@ import Footer from "../components/landingPage/Footer";
 import UniversityCard from "../components/student/UniversityCard";
 import { useDebounce } from "use-debounce";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { Spinner } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../config/axiosConfig";
 
 const LandingPage = () => {
   return (
@@ -94,8 +94,8 @@ const UniversitiesShowcase = () => {
   const fetchUniversities = async (page = 1, search = "") => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/universities?page=${page}&limit=4&search=${search}`,
+      const response = await axiosInstance.get(
+        `/api/universities?page=${page}&limit=4&search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
