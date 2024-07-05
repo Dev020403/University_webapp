@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://university-backend-vxc9.onrender.com',
+    baseURL: 'http://localhost:3000',
 });
 
 export default axiosInstance;

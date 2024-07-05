@@ -10,6 +10,7 @@ import { Spinner } from "@nextui-org/react";
 const UniversityDetails = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const [university, setUniversity] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
@@ -18,7 +19,7 @@ const UniversityDetails = () => {
     const fetchUniversityDetails = async () => {
       try {
         const response = await axiosInstance.get(`/api/universities/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, role: role },
         });
         setUniversity(response.data);
       } catch (error) {
@@ -26,7 +27,7 @@ const UniversityDetails = () => {
       }
     };
     fetchUniversityDetails();
-  }, [id, token]);
+  }, [id, token, role]);
 
   if (!university) {
     return (

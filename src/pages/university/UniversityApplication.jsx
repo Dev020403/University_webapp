@@ -20,6 +20,7 @@ const Application = () => {
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
   const universityId = useSelector((state) => state.auth.user._id);
+  const role = useSelector((state) => state.auth.role);
 
   // Fetch applications data from the backend API
   const fetchApplications = async (page = 1) => {
@@ -36,6 +37,7 @@ const Application = () => {
           },
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );
@@ -74,6 +76,7 @@ const Application = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );
@@ -132,13 +135,13 @@ const Application = () => {
 
   const rows = applications.map((application) => ({
     id: application._id,
-    course: application.course.name,
-    name: application.student.profile.name,
-    email: application.student.email,
-    contact: application.student.profile.personalInfo.phone,
+    course: application?.course.name,
+    name: application?.student?.profile?.name,
+    email: application?.student?.email,
+    contact: application?.student?.profile?.personalInfo?.phone,
     status: getStatusSelect(application._id, application.applicationStatus),
-    jeePr: application.student.profile.academicBackground.jeePr,
-    boardPr: application.student.profile.academicBackground.boardPr,
+    jeePr: application?.student?.profile?.academicBackground?.jeePr,
+    boardPr: application?.student?.profile?.academicBackground?.boardPr,
   }));
 
   // Handle page change

@@ -56,6 +56,7 @@ const StudentSetting = () => {
   const user = useSelector((state) => state.auth.user);
   const userId = user?._id;
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -92,6 +93,7 @@ const StudentSetting = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

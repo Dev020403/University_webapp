@@ -13,6 +13,7 @@ const UniversityList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false); // Loading state
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
 
@@ -24,6 +25,7 @@ const UniversityList = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

@@ -44,6 +44,7 @@ const UniversitySettings = () => {
   const id = university._id;
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const initialValues = {
     name: university?.name || "",
@@ -81,6 +82,7 @@ const UniversitySettings = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

@@ -10,6 +10,7 @@ import axiosInstance from "../../config/axiosConfig";
 const CreateCourseModal = ({ showModal, setShowModal, fetchCourses }) => {
   const universityId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const initialValues = {
     name: "",
@@ -44,6 +45,7 @@ const CreateCourseModal = ({ showModal, setShowModal, fetchCourses }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );
