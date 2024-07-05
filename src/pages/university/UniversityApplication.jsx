@@ -137,8 +137,8 @@ const Application = () => {
     email: application?.student?.email,
     contact: application?.student?.profile?.personalInfo?.phone,
     status: getStatusSelect(application._id, application.applicationStatus),
-    jeePr: application?.student?.profile?.academicBackground?.jeePr,
-    boardPr: application?.student?.profile?.academicBackground?.boardPr,
+    jeePr: application?.student?.profile?.academicBackground?.jeePr || null,
+    boardPr: application?.student?.profile?.academicBackground?.boardPr || null,
   }));
 
   // Handle page change
