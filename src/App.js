@@ -67,10 +67,12 @@ function App() {
 
             {/* Admin Routes */}
             <Route path='/admin/login' Component={AdminLogin} />
-            <Route path='/admin-dashboard/dashboard' Component={AdminDashboard} />
-            <Route path='/admin-dashboard/universities' Component={AdminUniversities} />
-            <Route path='/admin-dashboard/students' Component={AdminStudents} />
-            <Route path='/admin-dashboard/setting' Component={AdminSettings} />
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+              <Route path='/admin-dashboard/dashboard' Component={AdminDashboard} />
+              <Route path='/admin-dashboard/universities' Component={AdminUniversities} />
+              <Route path='/admin-dashboard/students' Component={AdminStudents} />
+              <Route path='/admin-dashboard/setting' Component={AdminSettings} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </NextUIProvider>

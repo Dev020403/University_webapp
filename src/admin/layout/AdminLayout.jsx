@@ -25,7 +25,6 @@ const navItems = [
     label: "All Students",
     icon: FaUserFriends,
   },
-  { to: "/admin-dashboard/setting", label: "Settings", icon: FaCog },
 ];
 
 const AdminLayout = ({ children }) => {
