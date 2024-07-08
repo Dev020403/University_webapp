@@ -4,13 +4,19 @@ import { useSelector } from "react-redux";
 import axiosInstance from "../../config/axiosConfig";
 import TableGrid from "../../components/TableGrid";
 import { Button, Input } from "@nextui-org/react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import {
+  FaEdit,
+  FaLink,
+  FaLinkedin,
+  FaTrashAlt,
+  FaUnlink,
+} from "react-icons/fa";
 import ViewUniversityModal from "../components/ViewUniversityModal";
 import EditUniversityModal from "../components/EditUniversityModal";
 import DeleteUniversityModal from "../components/DeleteUniversityModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDebounce } from "use-debounce"; // Import use-debounce
+import { useDebounce } from "use-debounce";
 
 const AdminUniversities = () => {
   const [universities, setUniversities] = useState([]);
@@ -24,7 +30,7 @@ const AdminUniversities = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [universityToDelete, setUniversityToDelete] = useState(null);
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 500); // Debounce search input
+  const [debouncedSearch] = useDebounce(search, 500);
 
   const token = useSelector((state) => state.adminAuth.token);
   const role = useSelector((state) => state.adminAuth.role);
@@ -41,8 +47,8 @@ const AdminUniversities = () => {
           },
         }
       );
-      setUniversities(response.data.universities);
-      setTotalPages(response.data.totalPages);
+      setUniversities(response.data.universities || []);
+      setTotalPages(response.data.totalPages || 1);
     } catch (error) {
       console.error("Error fetching universities:", error);
     } finally {
@@ -59,18 +65,25 @@ const AdminUniversities = () => {
   };
 
   const columns = [
-    { key: "id", label: "ID" },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
+    { key: "contact", label: "Contact" },
+    { key: "website", label: "Website" },
     { key: "status", label: "Status" },
     { key: "actions", label: "Actions" },
-    { key: "updateStatus", label: "Update Status" }, // New column for update status button
+    { key: "updateStatus", label: "Update Status" },
   ];
 
   const rows = universities.map((university) => ({
     id: university._id,
-    name: university.name,
-    email: university.email,
+    name: university.name || "N/A",
+    email: university.email || "N/A",
+    contact: university.contactDetails?.phone || "N/A",
+    website: (
+      <span className="flex justify-center cursor-pointer">
+        <FaLink></FaLink>
+      </span>
+    ),
     status: (
       <span
         className={`px-2 py-1 rounded-full text-xs font-semibold
@@ -80,7 +93,7 @@ const AdminUniversities = () => {
             : "bg-red-100 text-red-800"
         }`}
       >
-        {university.status}
+        {university.status || "N/A"}
       </span>
     ),
     actions: (
@@ -121,18 +134,20 @@ const AdminUniversities = () => {
 
   const handleView = (id) => {
     const university = universities.find((uni) => uni._id === id);
-    setSelectedUniversity(university);
+    setSelectedUniversity(university || null);
     setViewModalOpen(true);
   };
 
   const handleEdit = (id) => {
     const university = universities.find((uni) => uni._id === id);
-    setEditingUniversity(university);
+    setEditingUniversity(university || null);
     setEditModalOpen(true);
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    if (!editingUniversity) return;
+
     try {
       const response = await axiosInstance.put(
         `/api/update-university/${editingUniversity._id}`,
@@ -169,11 +184,13 @@ const AdminUniversities = () => {
 
   const handleDelete = (id) => {
     const university = universities.find((uni) => uni._id === id);
-    setUniversityToDelete(university);
+    setUniversityToDelete(university || null);
     setDeleteModalOpen(true);
   };
 
   const confirmDelete = async () => {
+    if (!universityToDelete) return;
+
     try {
       const response = await axiosInstance.delete(
         `/api/delete-university/${universityToDelete._id}`,

@@ -58,18 +58,23 @@ const AdminStudents = () => {
   };
 
   const columns = [
-    { key: "id", label: "ID" },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
+    { key: "phone", label: "Phone" },
+    { key: "jeePr", label: "JEE %ile" },
+    { key: "boardPr", label: "Board %ile" },
     { key: "status", label: "Status" },
     { key: "actions", label: "Actions" },
-    { key: "updateStatus", label: "Update Status" }, // Added column for update status button
+    { key: "updateStatus", label: "Update Status" },
   ];
 
   const rows = students.map((student) => ({
     id: student._id,
-    name: student.profile.name,
-    email: student.email,
+    name: student?.profile?.name,
+    email: student?.email,
+    phone: student?.profile?.personalInfo?.phone,
+    jeePr: student?.profile?.academicBackground?.jeePr,
+    boardPr: student?.profile?.academicBackground?.boardPr,
     status: (
       <span
         className={`px-2 py-1 rounded-full text-xs font-semibold
