@@ -22,6 +22,11 @@ import CourseDetails from './pages/student/CourseDetails';
 import UniversityCourses from './pages/university/UniversityCourses';
 import NotFound from './NotFound';
 import LandingPage from './pages/LandingPage';
+import AdminDashboard from './admin/pages/AdminDashboard';
+import AdminUniversities from './admin/pages/AdminUniversities';
+import AdminStudents from './admin/pages/AdminStudents';
+import AdminSettings from './admin/pages/AdminSettings';
+import AdminLogin from './admin/pages/AdminLogin';
 
 function App() {
   return (
@@ -39,13 +44,13 @@ function App() {
 
             {/* Student Routes */}
             <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-              <Route path='/student-dashboard/Dashboard' Component={StudentDashboard} />
-              <Route path='/student-dashboard/Universities' Component={UniversityList} />
+              <Route path='/student-dashboard/dashboard' Component={StudentDashboard} />
+              <Route path='/student-dashboard/universities' Component={UniversityList} />
               <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/student-onboard' Component={StudentOnboardForm} />
               <Route path='/university/course-details/:id' Component={CourseDetails} />
-              <Route path='/student-dashboard/Applications' Component={YourApplications} />
-              <Route path='/student-dashboard/Setting' Component={StudentSetting} />
+              <Route path='/student-dashboard/applications' Component={YourApplications} />
+              <Route path='/student-dashboard/setting' Component={StudentSetting} />
               <Route path='/student-dashboard/profile' Component={StudentProfile} />
             </Route>
 
@@ -53,12 +58,19 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={['university']} />}>
               <Route path="/university/:id" Component={UniversityDetails} />
               <Route path='/university-onboard' Component={UniversityOnboardForm} />
-              <Route path='/university-dashboard/Setting' Component={UniversitySetting} />
-              <Route path='/university-dashboard/Application' Component={UniversityApplication} />
-              <Route path='/university-dashboard/Dashboard' Component={UniversityDashboard} />
+              <Route path='/university-dashboard/setting' Component={UniversitySetting} />
+              <Route path='/university-dashboard/application' Component={UniversityApplication} />
+              <Route path='/university-dashboard/dashboard' Component={UniversityDashboard} />
               <Route path='/university-dashboard/profile' Component={UniversityProfile} />
               <Route path='/university-dashboard/courses' Component={UniversityCourses} />
             </Route>
+
+            {/* Admin Routes */}
+            <Route path='/admin/login' Component={AdminLogin} />
+            <Route path='/admin-dashboard/dashboard' Component={AdminDashboard} />
+            <Route path='/admin-dashboard/universities' Component={AdminUniversities} />
+            <Route path='/admin-dashboard/students' Component={AdminStudents} />
+            <Route path='/admin-dashboard/setting' Component={AdminSettings} />
           </Routes>
         </BrowserRouter>
       </NextUIProvider>
