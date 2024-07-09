@@ -11,17 +11,25 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './authSlice';
+import adminAuthReducer from './adminAuthSlice';
 
-const persistConfig = {
-    key: 'root',
+const authPersistConfig = {
+    key: 'auth',
     storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, authReducer);
+const adminAuthPersistConfig = {
+    key: 'adminAuth',
+    storage,
+};
+
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedAdminAuthReducer = persistReducer(adminAuthPersistConfig, adminAuthReducer);
 
 const store = configureStore({
     reducer: {
-        auth: persistedReducer,
+        auth: persistedAuthReducer,
+        adminAuth: persistedAdminAuthReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

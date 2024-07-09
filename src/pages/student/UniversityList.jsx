@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import StudentLayout from "../../layout/StudentLayout";
 import UniversityCard from "../../components/student/UniversityCard";
-import { useDebounce } from "use-debounce"; // Import useDebounce hook
+import { useDebounce } from "use-debounce"; 
 import { Spinner } from "@nextui-org/react";
 import axiosInstance from "../../config/axiosConfig";
 
@@ -11,8 +11,9 @@ const UniversityList = () => {
   const [universities, setUniversities] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); 
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
 
@@ -24,6 +25,7 @@ const UniversityList = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

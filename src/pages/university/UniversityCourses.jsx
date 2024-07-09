@@ -24,6 +24,7 @@ const UniversityCourses = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const universityId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Course name is required"),
@@ -52,6 +53,7 @@ const UniversityCourses = () => {
       const response = await axiosInstance.get(`/api/${universityId}/courses`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          role: role,
         },
       });
       setCourses(response.data);
@@ -80,6 +82,7 @@ const UniversityCourses = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );
@@ -96,6 +99,7 @@ const UniversityCourses = () => {
       await axiosInstance.delete(`/api/delete-courses/${courseId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          role: role,
         },
       });
       fetchCourses();
@@ -119,6 +123,7 @@ const UniversityCourses = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

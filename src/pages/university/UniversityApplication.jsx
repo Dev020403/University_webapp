@@ -20,6 +20,7 @@ const Application = () => {
   const rowsPerPage = 10;
   const token = useSelector((state) => state.auth.token);
   const universityId = useSelector((state) => state.auth.user._id);
+  const role = useSelector((state) => state.auth.role);
 
   // Fetch applications data from the backend API
   const fetchApplications = async (page = 1) => {
@@ -36,6 +37,7 @@ const Application = () => {
           },
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );
@@ -74,6 +76,7 @@ const Application = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

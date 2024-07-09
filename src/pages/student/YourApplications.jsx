@@ -12,6 +12,7 @@ const StudentApplications = () => {
   const [totalPages, setTotalPages] = useState(1);
   const studentId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
   const rowsPerPage = 10;
 
   const fetchApplications = async (page = 1) => {
@@ -22,6 +23,7 @@ const StudentApplications = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );

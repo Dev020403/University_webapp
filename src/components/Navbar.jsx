@@ -11,13 +11,20 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/authSlice";
+import { adminLogout } from "../redux/adminAuthSlice";
 
 const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
-  const role = useSelector((state) => state.auth.role);
   const navigate = useNavigate();
+
+  const adminAuth = useSelector((state) => state.adminAuth);
+  const userAuth = useSelector((state) => state.auth);
+
+  const isAdminView = !!adminAuth.user;
+  const user = isAdminView ? adminAuth.user : userAuth.user;
+  const role = isAdminView ? "admin" : userAuth.role;
+
   const lastPathSegment = location.pathname
     .split("/")
     .filter((segment) => segment !== "")
@@ -29,21 +36,31 @@ const Navbar = () => {
       : "LOGO";
 
   const handleProfileClick = () => {
-    if (role === "university") navigate("/university-dashboard/profile");
+    if (isAdminView) navigate("/admin-dashboard/profile");
+    else if (role === "university") navigate("/university-dashboard/profile");
     else navigate("/student-dashboard/profile");
   };
 
   const handleSettingsClick = () => {
-    if (role === "university") navigate("/university-dashboard/setting");
+    if (isAdminView) navigate("/admin-dashboard/setting");
+    else if (role === "university") navigate("/university-dashboard/setting");
     else navigate("/student-dashboard/setting");
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    if (isAdminView) {
+      dispatch(adminLogout());
+      navigate("/admin/login");
+    } else {
+      dispatch(logout());
+      navigate("/login");
+    }
   };
 
-  const handleLoginClick = () => {
-    navigate("/login");
+  const getName = () => {
+    if (isAdminView) return user?.username;
+    if (role === "university") return user?.name;
+    return user?.profile?.name || user?.username;
   };
 
   return (
@@ -69,16 +86,14 @@ const Navbar = () => {
                       "https://i.pravatar.cc/150?u=a042581f4e29026024d",
                   }}
                   className="transition-transform"
-                  description={`@${user?.username || "guest"}`}
-                  name={
-                    role === "university" ? user?.name : user?.profile?.name
-                  }
+                  description={`@${user.username}`}
+                  name={getName()}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="User Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2">
                   <p className="font-bold">Signed in as</p>
-                  <p className="font-bold">@{user?.username || "guest"}</p>
+                  <p className="font-bold">@{user.username}</p>
                 </DropdownItem>
                 <DropdownItem key="profile" onClick={handleProfileClick}>
                   My Profile
@@ -96,27 +111,25 @@ const Navbar = () => {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <>
-              <div className="flex gap-3">
-                <Button
-                  radius="full"
-                  onClick={() => {
-                    navigate("/signup");
-                  }}
-                >
-                  Register
-                </Button>
-                <Button
-                  radius="full"
-                  color="primary"
-                  onClick={() => {
-                    navigate("/login");
-                  }}
-                >
-                  Login
-                </Button>
-              </div>
-            </>
+            <div className="flex gap-3">
+              <Button
+                radius="full"
+                onClick={() =>
+                  navigate(isAdminView ? "/admin/signup" : "/signup")
+                }
+              >
+                Register
+              </Button>
+              <Button
+                radius="full"
+                color="primary"
+                onClick={() =>
+                  navigate(isAdminView ? "/admin/login" : "/login")
+                }
+              >
+                Login
+              </Button>
+            </div>
           )}
         </div>
       </div>

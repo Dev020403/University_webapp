@@ -13,11 +13,12 @@ const CourseDetails = () => {
   const universityId = course?.university;
   const studentId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
 
   const fetchCourseData = async () => {
     try {
       const res = await axiosInstance.get(`/api/course/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, role: role },
       });
       setCourse(res.data);
     } catch (e) {
@@ -36,7 +37,7 @@ const CourseDetails = () => {
           courseId: id,
         },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, role: role },
         }
       );
       if (response.data.code === 400) {

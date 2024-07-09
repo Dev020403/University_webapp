@@ -11,10 +11,11 @@ const StudentDashboard = () => {
     (state) => state.auth.user?.profile?.name || "Guest"
   );
   const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
   const [universities, setUniversities] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const fetchUniversities = async (page = 1, limit = 2) => {
     setLoading(true);
@@ -24,6 +25,7 @@ const StudentDashboard = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            role: role,
           },
         }
       );
@@ -31,7 +33,7 @@ const StudentDashboard = () => {
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error("Error fetching universities:", error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };

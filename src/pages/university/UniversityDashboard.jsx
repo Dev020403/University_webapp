@@ -8,6 +8,9 @@ import axiosInstance from "../../config/axiosConfig";
 const Dashboard = () => {
   const userName = useSelector((state) => state.auth.user?.name || "Guest");
   const universityId = useSelector((state) => state.auth.user?._id);
+  const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
+  
   const [totalCourses, setTotalCourses] = useState(0);
   const [acceptedCount, setAcceptedCount] = useState(0);
   const [rejectedCount, setRejectedCount] = useState(0);
@@ -20,15 +23,15 @@ const Dashboard = () => {
     { name: "Rejected", value: rejectedCount },
     { name: "Accepted", value: acceptedCount },
   ];
-  const token = useSelector((state) => state.auth.token);
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
+  
   const fetchData = async () => {
     try {
       const res = await axiosInstance.get(
         `/api/${universityId}/totalData`,{
           headers: {
             Authorization: `Bearer ${token}`,
+            role:role
           },
         }
       );
